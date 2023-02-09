@@ -1,5 +1,4 @@
-#ifndef NoControllerMatrix_h
-#define NoControllerMatrix_h
+#include "Frames.h"
 
 //Numeros
 bool no0[8][8] = {
@@ -207,4 +206,3 @@ bool signoIgual[8][8] = {
   {0,0,0,0,0,0,0,0},
   {0,0,0,0,0,0,0,0}
 };
-#endif

@@ -9,11 +9,26 @@
 */
 
 #include "NoControllerMatrix/NoControllerMatrix.h"
+#include "NoControllerMatrix/NoControllerMatrix.cpp"
+
+#include "Frames/Frames.h"
+#include "Frames/Frames.cpp"
+
+
+int leftMatrixRowPins[8] = {30,31,32,33,34,35,36,37};
+int leftMatrixColumnPins[8] = {40,41,42,43,44,45,46,47};
+
+NoControllerMatrix leftMatrix(leftMatrixRowPins, leftMatrixColumnPins);
 
 void setup() {
-    // put your setup code here, to run once:
+
+  leftMatrix.initMatrix();
+  leftMatrix.resetMatrix();
+
 }
 
 void loop() {
-    // put your main code here, to run repeatedly:
+
+  leftMatrix.setMatrix(signoIgual);
+
 }
