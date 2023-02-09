@@ -1,0 +1,6 @@
+# PROTEUS FILES
+*.pdsbak
+*.workspace
+SCRIPTS/
+*.XML
+*.CDB
