@@ -1,67 +1,53 @@
 #include "Arduino.h"
 
-class Paddle : public Variables
-{
-public:
-    Paddle();
-    ~Paddle() {}
-
-    int x;
-    int y;
-    int width;
-
-    void draw();
+class GameObject {
+    public: 
+    bool getElement() {
+        return 1;
+    }
 }
 
-class Block : public Variables
-{
-public:
-    Block();
-    ~Block() {}
-    static const int totalBlocks = 64;
-    static const int columns = 16;
-    static const int rows = 4;
 
-    void reset();
-    void draw()
-};
+class Ball: public GameObject {
+    public: 
+        Ball(int targetX, int targetY);
 
-class Ball : public Variables
-{
-public:
-    Ball();
-    ~Ball() {}
+        int targetX;
+        int targetY;
+        int velocity = 1500;
 
-    int x;
-    int y;
-    int xSpeed;
-    int ySpeed;
-
-    void reset();
-    void move();
-    // TODO: añadir propiedad para buzzer
-    void collision(Paddle &paddle, Block &block);
-    void draw();
+        void getNextPosition();
 }
 
-class bAttract : public Variables
-{
-public:
-    void draw(U8G2_ST7920_128X64_1_6800 &screen);
-};
+class Paddle: public GameObject {
+    public: 
+        Paddle(Paddle *paddle);
+        Paddle *nextPaddle;
+}
 
-class Breakout : public Variables
-{
+class Brick: public GameObject {
+    public: 
+        Brick(int xPos, int yPos);
 
-public:
-    Breakout();
-    ~Breakout() {}
+        int xPos;
+        int yPos;
 
-    Paddle paddle;
-    Block block;
-    Ball ball;
-    bAttract attract;
+        Brick *nextBrick;
 
-    void draw();
-    void logic();
+        void setNextBrick(Brick *brick);
+}
+
+class Breakout {
+    public: 
+    Breakout(){};
+
+    int hp = 3;
+    int score = 0;
+    GameObject *table[8][16];
+
+    void reset();
+    void pause();
+    void exit();
+
+    bool getMatrix();
 }
