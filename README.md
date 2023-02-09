@@ -9,7 +9,7 @@
 
 ### Índice
 
-- [Código fuente](https://gitlab.com/grupo-7-ace1b-1s2023/ACE1-231S0778BG07PRA1/src)
+- [Código fuente](https://gitlab.com/grupo-7-ace1b-1s2023/ACE1-231S0778BG07PRA1/-/tree/main/src)
 - [Archivos de Proteus](https://gitlab.com/grupo-7-ace1b-1s2023/ACE1-231S0778BG07PRA1/proteus)
-- [Manual Técnico](https://gitlab.com/grupo-7-ace1b-1s2023/ACE1-231S0778BG07PRA1/docs/tech)
-- [Manual Técnico](https://gitlab.com/grupo-7-ace1b-1s2023/ACE1-231S0778BG07PRA1/docs/user)
+- [Manual Técnico](https://gitlab.com/grupo-7-ace1b-1s2023/ACE1-231S0778BG07PRA1/-/tree/main/docs/tech)
+- [Manual de Usuario](https://gitlab.com/grupo-7-ace1b-1s2023/ACE1-231S0778BG07PRA1/-/tree/main/docs/user)
