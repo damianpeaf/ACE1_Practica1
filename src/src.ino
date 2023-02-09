@@ -8,14 +8,15 @@
         - José Manuel Ibarra Pirir 202001800
 */
 
-// #include "NoControllerMatrix/NoControllerMatrix.h"
-// #include "NoControllerMatrix/NoControllerMatrix.cpp"
-
 #include <LedControl.h>
+
+#include "NoControllerMatrix/NoControllerMatrix.h"
+#include "NoControllerMatrix/NoControllerMatrix.cpp"
+
 #include "NoControllerMatrix/DualMatrixController.h"
 #include "NoControllerMatrix/DualMatrixController.cpp"
 
-
+#include "breakout/Breakout.h"
 
 
 int leftMatrixRowPins[8] = {30,31,32,33,34,35,36,37};
@@ -29,6 +30,8 @@ LedControl rightMatrix(11, 13, 10, 1);
 DualMatrixController screen(&leftMatrix, &rightMatrix);
 
 unsigned long actualTime = millis();
+
+Breakout breakout;
 
 bool dots[8][16] = {
   {0,0,0,1,1,0,0,0,0,1,1,1,1,1,1,0},
@@ -65,16 +68,19 @@ void setup() {
 
   Serial.begin(9600);
   screen.initMatrix();
+  breakout.reset();
 
 }
 
 void loop() {
 
-  screen.setMatrix(dots);
+  
+  breakout.refreshMatrix();
+  screen.setMatrix(breakout.matrix);
 
-  if (millis() - actualTime > 1000) {
-    actualTime = millis();
-    cycleMatrix();
-  }
+  // if (millis() - actualTime > 1000) {
+  //   actualTime = millis();
+  //   cycleMatrix();
+  // }
 
 }
