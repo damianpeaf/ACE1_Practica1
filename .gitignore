@@ -11,3 +11,5 @@ SCRIPTS/
 *.hex
 *.bin
 build/
+
+*.vscode

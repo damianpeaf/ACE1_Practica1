@@ -6,6 +6,10 @@ public:
     Paddle();
     ~Paddle() {}
 
+    int x;
+    int y;
+    int width;
+
     void draw();
 }
 
@@ -14,9 +18,9 @@ class Block : public Variables
 public:
     Block();
     ~Block() {}
-    static const int totalBlocks = 35;
-    static const int columns = 7;
-    static const int rows = 5;
+    static const int totalBlocks = 64;
+    static const int columns = 16;
+    static const int rows = 4;
 
     void reset();
     void draw()
@@ -28,9 +32,15 @@ public:
     Ball();
     ~Ball() {}
 
+    int x;
+    int y;
+    int xSpeed;
+    int ySpeed;
+
     void reset();
     void move();
-    void collision();
+    // TODO: añadir propiedad para buzzer
+    void collision(Paddle &paddle, Block &block);
     void draw();
 }
 
