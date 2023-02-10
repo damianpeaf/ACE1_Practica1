@@ -50,19 +50,37 @@ int currentLeftSideCol = 0;
 
 
 void cycleMessageLeft () {
-  for (int i = 0; i < 8; i++) {
-    for (int j = 0; j < 16; j++) {
-      if(j+currentLeftSideCol <= 142) {
-        resizedMessage[i][j] = fullMessage[i][j+currentLeftSideCol];
-      } else {
-        resizedMessage[i][j] = fullMessage[i][j+currentLeftSideCol-143];
-      }
-    }
-  }
+  
+  computeResizedMessage();
+
   currentLeftSideCol++;
 
   if (currentLeftSideCol == 142) {
     currentLeftSideCol = 0;
+  } 
+}
+
+void computeResizedMessage() {
+  for (int i = 0; i < 8; i++) {
+    for (int j = 0; j < 16; j++) {
+      
+      if(j+currentLeftSideCol <= 142) {
+        resizedMessage[i][j] = fullMessage[i][j+currentLeftSideCol];
+      }else {
+        resizedMessage[i][j] = fullMessage[i][j+currentLeftSideCol-143];
+      }
+    }
+  }
+}
+
+void cycleMessageRight(){
+  
+  computeResizedMessage();
+
+  currentLeftSideCol--;
+
+  if (currentLeftSideCol == -1) {
+    currentLeftSideCol = 142;
   } 
 }
 
