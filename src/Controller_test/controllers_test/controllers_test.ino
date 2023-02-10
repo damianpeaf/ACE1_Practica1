@@ -12,7 +12,7 @@ unsigned long timeMillis;
 unsigned long previousMillis = 0;
 const long interval = 3000;
 const long interval_2 = 2000;
-int buttons_mode = 0; // 0 is the first mode to control the text lop, 1 to control the game mode, and 2 the pause / configurate mode
+int buttons_mode = 0; // 0 is the first mode to control the text loop, 1 to control the game mode, and 2 the pause / configurate mode
 
 void setup() {
   // put your setup code here, to run once:
