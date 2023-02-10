@@ -1,13 +1,13 @@
-#include "NoControllerMatrix.h"
+#include "NoDriverMatrix.h"
 
-NoControllerMatrix::NoControllerMatrix(int rp[8], int cp[8]) {
+NoDriverMatrix::NoDriverMatrix(int rp[8], int cp[8]) {
     for(int pin = 0; pin < 8; pin++){
         this->rowPins[pin] = rp[pin];
         this->columnPins[pin] = cp[pin];
     }
 }
 
-void NoControllerMatrix::setMatrix(bool matrix[8][8]) {
+void NoDriverMatrix::setMatrix(bool matrix[8][8]) {
     for(int row = 0; row < 8; row++){
 
         // Turn on the row
@@ -35,14 +35,14 @@ void NoControllerMatrix::setMatrix(bool matrix[8][8]) {
     }
 };
 
-void NoControllerMatrix::initMatrix(){
+void NoDriverMatrix::initMatrix(){
     for(int pin = 0; pin < 8; pin++){
         pinMode(this->rowPins[pin], OUTPUT);
         pinMode(this->columnPins[pin], OUTPUT);
     }
 }
 
-void NoControllerMatrix::resetMatrix(){
+void NoDriverMatrix::resetMatrix(){
     for(int pin = 0; pin < 8; pin++){
         digitalWrite(this->rowPins[pin], LOW);
         digitalWrite(this->columnPins[pin], HIGH);

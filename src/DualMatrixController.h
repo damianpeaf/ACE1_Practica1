@@ -5,13 +5,13 @@
 #include "Arduino.h"
 #include <LedControl.h>
 
-#include "NoControllerMatrix.h"
+#include "NoDriverMatrix.h"
 
 class DualMatrixController {
 
     public:
         DualMatrixController(
-            NoControllerMatrix *leftMatrix,
+            NoDriverMatrix *leftMatrix,
             LedControl *rightMatrix
         );
 
@@ -22,7 +22,7 @@ class DualMatrixController {
     void resetMatrix(void);
 
     private:
-        NoControllerMatrix *leftMatrix;
+        NoDriverMatrix *leftMatrix;
         LedControl *rightMatrix;
 };
 

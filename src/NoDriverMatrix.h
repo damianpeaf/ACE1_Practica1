@@ -1,13 +1,13 @@
 
-#ifndef NoControllerMatrix_h
-#define NoControllerMatrix_h
+#ifndef NoDriverMatrix_h
+#define NoDriverMatrix_h
 
 #include "Arduino.h"
 
-class NoControllerMatrix {
+class NoDriverMatrix {
 
   public:
-    NoControllerMatrix(int rp[8], int cp[8]);
+    NoDriverMatrix(int rp[8], int cp[8]);
     
     void setMatrix(bool matrix[8][8]);
 

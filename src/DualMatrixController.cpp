@@ -2,7 +2,7 @@
 #include "DualMatrixController.h"
 
 DualMatrixController::DualMatrixController(
-    NoControllerMatrix *leftMatrix,
+    NoDriverMatrix *leftMatrix,
     LedControl *rightMatrix
 ) {
     this->leftMatrix = leftMatrix;
