@@ -1,89 +1,48 @@
 #include "Breakout.h"
 
-Paddle::Paddle()
-{
-    x = 5;
-    y = 0;
-    width = 5;
+Brick::Brick(int xPos, int yPos){
+    this -> xPos = xPos;
+    this -> yPos = yPos;
 }
 
-void Paddle::draw()
-{
-    screen.drawFrame(x, y, width, 1);
+Brick::setNextBrick(Brick *brick){
+    this -> nextBrick = brick;
 }
 
-Block::Block()
-{
-    reset();
-}
+Breakout::reset(){
 
-void Block::reset()
-{
-    for (int i = 0; i < totalBlocks; i++)
-    {
-        blocks[i].x = (i % columns) * 2 + 1;
-        blocks[i].y = (i / columns) * 2 + 1;
-        blocks[i].width = 2;
-        blocks[i].height = 2;
-        blocks[i].active = true;
+    for (int i = 0; i < 8; i++){
+        for (int j = 0; j < 16; j++){
+            this -> table[i][j] = nullptr;
+        }
     }
-}
 
-void Block::draw()
-{
-    for (int i = 0; i < totalBlocks; i++)
-    {
-        if (blocks[i].active)
-        {
-            screen.drawFrame(blocks[i].x, blocks[i].y, blocks[i].width, blocks[i].height);
+    for(int i = 0; i < 4; i++){
+        for (int j = 0 ; j < 16; j+= 2){
+            Brick rBrick =  new Brick(i, j + 1);
+            Brick lBrick =  new Brick(i, j);
+
+            lBrick.setNextBrick(&rBrick);
+            rBrick.setNextBrick(&lBrick);
+
+            this -> table[i][j] = lBrick;
+            this -> table[i][j+1] = rBrick;
         }
     }
 }
 
-Ball::Ball()
-{
-    reset();
-}
+Breakout::getMatrix(){
+    bool matrix[8][16];
 
-void Ball::reset()
-{
-    xSpeed = 2;
-    ySpeed = -2;
-    x = 8;
-    y = 1
-}
+    for(int i = 0; i < 8; i++){
+        for (int j = 0 ; j < 16; j++){
+            if(this -> table[i][j] != nullptr){
+                matrix[i][j] = this -> table[i][j].getElement();
+            } else {
+                matrix[i][j] = 0;
+            }
+        }
+    }
 
-void Ball::move()
-{
-    x += xSpeed;
-    y += ySpeed;
-}
-
-void Ball::collision(Paddle &paddle, Block &block)
-{
-}
-
-void Ball::draw()
-{
-}
-
-Breakout::Breakout()
-{
-}
-
-Breakout::~Breakout()
-{
-}
-
-void Breakout::draw()
-{
-    paddle.draw();
-    block.draw();
-    ball.draw();
-    battract.draw();
-}
-
-void Breakout::controls()
-{
-    // TODO: añadir controles
+    return matrix;
 }

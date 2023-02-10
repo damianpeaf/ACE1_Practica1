@@ -1,67 +1,90 @@
 #include "Arduino.h"
 
-class Paddle : public Variables
-{
-public:
-    Paddle();
-    ~Paddle() {}
-
-    int x;
-    int y;
-    int width;
-
-    void draw();
-}
-
-class Block : public Variables
-{
-public:
-    Block();
-    ~Block() {}
-    static const int totalBlocks = 64;
-    static const int columns = 16;
-    static const int rows = 4;
-
-    void reset();
-    void draw()
+class GameObject {
+    public: 
+        bool getElement() {
+            return 1;
+        }
 };
 
-class Ball : public Variables
-{
-public:
-    Ball();
-    ~Ball() {}
 
-    int x;
-    int y;
-    int xSpeed;
-    int ySpeed;
+// class Ball: public GameObject {
+//     public: 
+//         Ball(int targetX, int targetY);
 
-    void reset();
-    void move();
-    // TODO: añadir propiedad para buzzer
-    void collision(Paddle &paddle, Block &block);
-    void draw();
-}
+//         int targetX;
+//         int targetY;
+//         int velocity = 1500;
 
-class bAttract : public Variables
-{
-public:
-    void draw(U8G2_ST7920_128X64_1_6800 &screen);
+//         void getNextPosition();
+// }
+
+// class Paddle: public GameObject {
+//     public: 
+//         Paddle(Paddle *paddle);
+//         Paddle *nextPaddle;
+// }
+
+class Brick: public GameObject {
+    public: 
+        Brick(int xPos, int yPos){
+            this -> xPos = xPos;
+            this -> yPos = yPos;
+        }
+
+        int xPos;
+        int yPos;
+
+        Brick *nextBrick;
+
+        void setNextBrick(Brick *brick){
+            this -> nextBrick = brick;
+        }
 };
 
-class Breakout : public Variables
-{
+class Breakout {
+    public: 
+    Breakout(){};
 
-public:
-    Breakout();
-    ~Breakout() {}
+    int hp = 3;
+    int score = 0;
+    GameObject *table[8][16];
 
-    Paddle paddle;
-    Block block;
-    Ball ball;
-    bAttract attract;
+    bool matrix [8][16];
 
-    void draw();
-    void logic();
-}
+    void reset(){
+        for (int i = 0; i < 8; i++){
+            for (int j = 0; j < 16; j++){
+                this -> table[i][j] = nullptr;
+            }
+        }
+
+        for(int i = 0; i < 4; i++){
+            for (int j = 0 ; j < 16; j+= 2){
+                Brick rBrick(i, j + 1)  ;
+                Brick lBrick(i, j);
+
+                lBrick.setNextBrick(&rBrick);
+                rBrick.setNextBrick(&lBrick);
+
+                this -> table[i][j] = &lBrick;
+                this -> table[i][j+1] = &rBrick;
+            }
+        }
+    };
+
+    void pause();
+    void exit();
+
+    void refreshMatrix(){
+        for(int i = 0; i < 8; i++){
+            for (int j = 0 ; j < 16; j++){
+                if(this -> table[i][j] != nullptr){
+                    this -> matrix[i][j] = this -> table[i][j] -> getElement();
+                } else {
+                    this-> matrix[i][j] = 0;
+                }
+            }
+        }
+    }
+};
