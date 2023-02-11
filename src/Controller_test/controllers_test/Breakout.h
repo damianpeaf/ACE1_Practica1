@@ -5,23 +5,32 @@ class GameObject {
         bool getElement() { return 1; }
 };
 
+class Ball: public GameObject {
+    public: 
+        Ball(int targetX, int targetY);
 
-// class Ball: public GameObject {
-//     public: 
-//         Ball(int targetX, int targetY);
+        int targetX;
+        int targetY;
+        int velocity = 1500;
 
-//         int targetX;
-//         int targetY;
-//         int velocity = 1500;
+        void getNextPosition();
+}
 
-//         void getNextPosition();
-// }
+class Paddle: public GameObject {
+    public: 
+        Paddle(int xPos, int yPos);
 
-// class Paddle: public GameObject {
-//     public: 
-//         Paddle(Paddle *paddle);
-//         Paddle *nextPaddle;
-// }
+        int xPos;
+        int yPos;
+
+        Paddle *nextPaddle;
+
+        void moveLeft();
+        void moveRight()
+
+        void setNextPaddle(Paddle *paddle);
+}
+
 
 class Brick: public GameObject {
     public: 
@@ -42,6 +51,8 @@ class Breakout {
     int hp = 3;
     int score = 0;
     GameObject *table[8][16];
+    Paddle *paddle;
+    Ball *ball;
 
     bool matrix [8][16];
 
