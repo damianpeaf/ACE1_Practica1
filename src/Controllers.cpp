@@ -28,6 +28,7 @@ const long interval_2 = 2000;
 int buttons_mode = 0; // 0 is the first mode to control the text loop, 1 to control the game mode, and 2 the pause / configurate mode
 
 
+
 // Initial Message logic for buttons
 void initial_mode() {
   
