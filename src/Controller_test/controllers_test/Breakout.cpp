@@ -2,9 +2,9 @@
 
 // --- Brick ---
 
-Brick::Brick(int xPos, int yPos) {
-    this -> xPos = xPos;
-    this -> yPos = yPos;
+Brick::Brick(int objectRow, int objectColumn) {
+    this -> objectRow = objectRow;
+    this -> objectColumn = objectColumn;
 }
 
 void Brick::setNextBrick(Brick *brick) {

@@ -2,33 +2,98 @@
 
 // --- Brick ---
 
-Brick::Brick(int xPos, int yPos) {
-    this -> xPos = xPos;
-    this -> yPos = yPos;
+Brick::Brick(int objectRow, int objectColumn) {
+    this -> objectRow = objectRow;
+    this -> objectColumn = objectColumn;
+    this -> objectType = 3;
 }
-
-Paddle::Paddle(int xPos, int yPos) {
-    this -> xPos = xPos;
-    this -> yPos = yPos;
-}
-
-Ball::Ball(int speedX, int speedY) {
-    this -> speedX = speedX;
-    this -> speedY = speedY;
-}
-
 
 void Brick::setNextBrick(Brick *brick) {
     this -> nextBrick = brick;
 }
 
+// --- Paddle ---
+
+Paddle::Paddle(int objectRow, int objectColumn) {
+    this -> objectRow = objectRow;
+    this -> objectColumn = objectColumn;
+    this -> objectType = 2;
+}
+
+
 void Paddle::setNextPaddle(Paddle *paddle) {
     this -> nextPaddle = paddle;
+}
+
+void Paddle::moveLeft() {
+    if(this -> objectColumn > 0){
+        this -> objectColumn--;
+        Serial.println("MOVING TO " + String(this -> objectColumn));
+        if (this -> nextPaddle != nullptr){
+            this -> nextPaddle -> moveLeft();
+        }
+    }
+}
+
+void Paddle::moveRight(bool isRoot){
+    // Condition only for the root paddle object
+    if(this -> objectColumn < 11 || !isRoot){
+        this -> objectColumn++;
+        if (this -> nextPaddle != nullptr){
+            this -> nextPaddle -> moveRight(false);
+        }
+    }
+}
+
+
+// --- Ball ---
+
+Ball::Ball() {
+    this -> objectType = 1;
+}
+
+void Ball::setPos(int objectRow, int objectColumn) {
+    this -> objectRow = objectRow;
+    this -> objectColumn = objectColumn;
+}
+
+void Ball::setSpeed(int rowSpeed, int columnSpeed) {
+    this -> columnSpeed = columnSpeed;
+    this -> rowSpeed = rowSpeed;
+}
+
+void Ball::invertcolumnSpeed() {
+    this -> columnSpeed = -this -> columnSpeed;
+}
+
+void Ball::invertrowSpeed() {
+    this -> rowSpeed = -this -> rowSpeed;
+}
+
+int Ball::getNewobjectRow() {
+    Serial.print("Ball row: " + String(this -> objectRow));
+    Serial.println(" | Speed: " + String(this -> rowSpeed));
+    Serial.println("New row: " + String((this -> objectRow) + (this -> rowSpeed)));
+    return  (this -> objectRow) + (this -> rowSpeed); 
+}
+
+int Ball::getNewobjectColumn() {
+
+    Serial.print("Ball column: " + String(this -> objectColumn));
+    Serial.println(" | Speed: " + String(this -> columnSpeed));
+    Serial.println("New column: " + String((this -> objectColumn) + (this -> columnSpeed)));
+    return  (this -> objectColumn) + (this -> columnSpeed); 
 }
 
 // --- Breakout ---
 
 void Breakout::reset() {
+
+    this -> hp = 3;
+    this -> score = 0;
+    this -> hasCollided = false;
+    this -> hasWon = false;
+    this -> hasLost = false;
 
     // Reset the table
     for (int i = 0; i < 8; i++){
@@ -40,8 +105,8 @@ void Breakout::reset() {
     // Create the bricks
     for(int i = 0; i < 4; i++){
         for (int j = 0 ; j < 16; j+= 2){
-            Brick rBrick(i, j + 1)  ;
-            Brick lBrick(i, j);
+            Brick rBrick(i,j + 1);
+            Brick lBrick(i,j);
 
             lBrick.setNextBrick(&rBrick);
             rBrick.setNextBrick(&lBrick);
@@ -53,31 +118,117 @@ void Breakout::reset() {
 
 
     // Create the paddle
-    Paddle paddle(7, 7);
-    Paddle paddle2(7, 8);
-    Paddle paddle3(7, 9);
-    Paddle paddle4(7, 10);
-    Paddle paddle5(7, 11);
-
+    Paddle paddle(7,6);
+    Paddle paddle2(7,7);
+    Paddle paddle3(7,8);
+    Paddle paddle4(7,9);
+    Paddle paddle5(7,10);
     paddle.setNextPaddle(&paddle2);
     paddle2.setNextPaddle(&paddle3);
     paddle3.setNextPaddle(&paddle4);
     paddle4.setNextPaddle(&paddle5);
-    paddle5.setNextPaddle(&paddle);
+    paddle5.setNextPaddle(nullptr);
 
-    this -> table[7][7] = &paddle;
-    this -> table[7][8] = &paddle2;
-    this -> table[7][9] = &paddle3;
-    this -> table[7][10] = &paddle4;
-    this -> table[7][11] = &paddle5;
-
-    // Create the ball
-    Ball ball(1, 1);
-    this -> table[6][8] = &ball;
+    this -> rootPaddle = &paddle;
+    this -> table[7][6] = &paddle;
+    this -> table[7][7] = &paddle2;
+    this -> table[7][8] = &paddle3;
+    this -> table[7][9] = &paddle4;
+    this -> table[7][10] = &paddle5;
     
+    // Create the ball
+    Ball ball = Ball();
+    ball.setSpeed(-1, 1);
+
+    // TODO: aleatorize the ball position
+    ball.setPos(6, 8);
+
+    // ??????????????????
+    Serial.println("Ball pos: " + String(ball.objectRow) + " " + String(ball.objectColumn));
+
+    this -> ball = &ball;
+    this -> table[6][8] = &ball;
 }
 
-void Breakout::pause() {}
+
+void Breakout::movePaddleLeft(){
+    this -> rootPaddle -> moveLeft();
+    movePaddle();    
+}
+
+
+void Breakout::movePaddleRight(){
+    this -> rootPaddle -> moveRight(true);
+    movePaddle();    
+}
+
+void Breakout::update(){
+
+    Serial.println("ACTUAL Ball pos: " + String(ball -> objectRow) + " " + String(ball -> objectColumn));
+
+    // * Table info
+    int newobjectRow = (this -> ball -> objectRow) + (this -> ball -> rowSpeed);
+    int newobjectColumn = (this -> ball -> objectColumn) + (this -> ball -> columnSpeed);
+
+    Serial.println("TARGET object pos: " + String(newobjectRow) + " " + String(newobjectColumn));
+
+    GameObject *collidedObject;
+
+    if (newobjectRow < 0 || newobjectRow > 7 || newobjectColumn < 0 || newobjectColumn > 15){
+        collidedObject = nullptr;
+    } else {
+        collidedObject = this -> table[newobjectRow][newobjectColumn];
+    }
+
+    // * Collision detection
+
+    // - Walls collision
+    // -- Ball collision with lateral walls
+    if(newobjectColumn < 0 || newobjectColumn > 15){
+        this -> ball -> invertcolumnSpeed();
+        Serial.println("Collision with lateral walls");
+    }
+
+    // -- Ball collision with the roof
+    else if(newobjectRow < 0){
+        this -> ball -> invertrowSpeed();
+        Serial.println("Collision with the roof");
+    }
+
+    // -- Ball collision with the floor
+    else if(newobjectRow > 7){
+        lifeLost();
+        Serial.println("Collision with the floor");
+    }
+    
+    // -- empty space collision
+    else if(collidedObject == nullptr){
+        Serial.println("Empty space collision");
+        moveBall();
+        return;
+    }
+
+    // - Game object collision
+    // -- Ball collision with paddle
+    else if (collidedObject -> objectType == 2){
+        // ? TODO: make the ball bounce in a different way depending on the paddle position
+        this -> ball -> invertrowSpeed();
+        Serial.println("Paddle collision " + String(collidedObject -> objectRow) + ", " + String(collidedObject -> objectColumn));
+    }
+
+    // -- Ball collision with brick
+    else if (collidedObject -> objectType == 3){
+        this -> ball -> invertrowSpeed();
+        this -> hasCollided = true;
+        destroyBrick((Brick *) collidedObject);
+        Serial.println("Brick collision");
+    }
+
+    // * New position
+    this -> hasCollided = true;
+    moveBall();
+
+}
 
 void Breakout::refreshMatrix(){
     for(int i = 0; i < 8; i++){
@@ -88,5 +239,61 @@ void Breakout::refreshMatrix(){
                 this-> matrix[i][j] = 0;
             }
         }
+    }
+}
+
+void Breakout::printMatrix(){
+    for(int i = 0; i < 8; i++){
+        for (int j = 0 ; j < 16; j++){
+            Serial.print(this -> matrix[i][j]);
+            Serial.print(" ");
+        }
+        Serial.println();
+    }
+}
+
+void Breakout::movePaddle(){
+
+    // clear paddle row
+    for (int i = 0; i < 16; i++){
+        this -> table[7][i] = nullptr;
+    }
+
+    Paddle *auxPaddle = this -> rootPaddle;
+    while (auxPaddle != nullptr){
+        this -> table[auxPaddle -> objectRow][auxPaddle -> objectColumn] = auxPaddle;
+        Serial.println("Paddle pos: " + String(auxPaddle -> objectRow) + " " + String(auxPaddle -> objectColumn));
+        auxPaddle = auxPaddle -> nextPaddle;
+    }
+}
+
+void Breakout::moveBall(){
+    // // clear ball position
+    // this -> table[this -> ball -> objectRow][this -> ball -> objectColumn] = nullptr;
+
+    // // update ball position
+    // this -> ball -> objectRow = this -> ball -> getNewobjectRow();
+    // this -> ball -> objectColumn = this -> ball -> getNewobjectColumn();
+
+    // // update ball position in the table
+    // this -> table[this -> ball -> objectRow][this -> ball -> objectColumn] = this -> ball;
+}
+
+void Breakout::destroyBrick(Brick *brick){
+    Serial.println("Brick collision function");
+
+    this -> score += 1;
+    this -> table [brick -> objectRow][brick -> objectColumn] = nullptr;
+    this -> table [brick -> nextBrick -> objectRow][brick -> nextBrick -> objectColumn] = nullptr;
+
+    if(this -> score == 32){
+        this -> hasWon = true;
+    }
+}
+
+void Breakout::lifeLost(){
+    this -> hp -= 1;
+    if(this -> hp == 0){
+        this -> hasLost = true;
     }
 }

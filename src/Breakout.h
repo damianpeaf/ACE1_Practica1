@@ -1,33 +1,45 @@
+#ifndef Breakout_H
+#define Breakout_H
+
 #include "Arduino.h"
 
 class GameObject {
     public: 
         bool getElement() { return 1; }
+        int objectType = 0;
+        int objectRow; 
+        int objectColumn;
+    
 };
 
 class Ball: public GameObject {
     public: 
-        Ball(int speedX, int speedY);
+        Ball();
 
 
-        int speedX;
-        int speedY;
-        int velocity = 1500;
+        int columnSpeed;
+        int rowSpeed;
+        int refreshRate = 1500;
 
-        void getNextPosition();
+        void setPos(int objectRow, int objectColumn);
+        void setSpeed(int rowSpeed, int columnSpeed);
+
+        void invertcolumnSpeed();
+        void invertrowSpeed();
+
+        int getNewobjectRow();
+        int getNewobjectColumn();
 };
 
 class Paddle: public GameObject {
     public: 
-        Paddle(int xPos, int yPos);
+        Paddle(int objectRow, int objectColumn);
 
-        int xPos;
-        int yPos;
 
         Paddle *nextPaddle;
 
         void moveLeft();
-        void moveRight();
+        void moveRight(bool isRoot);
 
         void setNextPaddle(Paddle *paddle);
 };
@@ -35,10 +47,7 @@ class Paddle: public GameObject {
 
 class Brick: public GameObject {
     public: 
-        Brick(int xPos, int yPos);
-
-        int xPos;
-        int yPos;
+        Brick(int objectRow, int objectColumn);
 
         Brick *nextBrick;
 
@@ -47,20 +56,38 @@ class Brick: public GameObject {
 
 class Breakout {
     public: 
-    Breakout(){};
+        Breakout(){};
 
-    int hp = 3;
-    int score = 0;
-    GameObject *table[8][16];
-    Paddle *paddle;
-    Ball *ball;
+        // props
+        bool matrix [8][16];
+        int hp = 3;
+        int score = 0;
+        bool hasCollided = false;
+        bool hasWon = false;
+        bool hasLost = false;
 
-    bool matrix [8][16];
 
-    void reset();
+        // methods
+        void reset();
+        void update();
 
-    void pause();
-    void exit();
+        void movePaddleLeft();
+        void movePaddleRight();
 
-    void refreshMatrix();
+        void refreshMatrix();
+        void printMatrix();
+
+    private:
+        // props
+        GameObject *table[8][16];
+        Paddle *rootPaddle;
+        Ball *ball;
+
+        // methods
+        void movePaddle();
+        void moveBall();
+        void lifeLost();
+        void destroyBrick(Brick *brick);
 };
+
+#endif

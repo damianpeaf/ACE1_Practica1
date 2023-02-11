@@ -7,11 +7,11 @@ class GameObject {
 
 class Ball: public GameObject {
     public: 
-        Ball(int speedX, int speedY);
+        Ball(int columnSpeed, int rowSpeed);
 
 
-        int speedX;
-        int speedY;
+        int columnSpeed;
+        int rowSpeed;
         int velocity = 1500;
 
         void getNextPosition();
@@ -19,10 +19,10 @@ class Ball: public GameObject {
 
 class Paddle: public GameObject {
     public: 
-        Paddle(int xPos, int yPos);
+        Paddle(int objectRow, int objectColumn);
 
-        int xPos;
-        int yPos;
+        int objectRow;
+        int objectColumn;
 
         Paddle *nextPaddle;
 
@@ -35,10 +35,10 @@ class Paddle: public GameObject {
 
 class Brick: public GameObject {
     public: 
-        Brick(int xPos, int yPos);
+        Brick(int objectRow, int objectColumn);
 
-        int xPos;
-        int yPos;
+        int objectRow;
+        int objectColumn;
 
         Brick *nextBrick;
 

@@ -64,10 +64,7 @@ void loop() {
     
     // Game MODE
     case 1:
-      // Serial.println("Running the game, waiting to move or configuration mode");
-      breakout.refreshMatrix();
-      screen.setMatrix(breakout.matrix);
-      game_mode();
+      game_mode(&screen, &breakout);
       break;
     
     // Configuration MODE

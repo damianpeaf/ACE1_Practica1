@@ -2,6 +2,8 @@
 #define Controllers_H
 
 #include "Arduino.h"
+#include "DualMatrixController.h"
+#include "Breakout.h"
 
 // Botons PINS
 extern const int BTN_IZQ;
@@ -31,7 +33,7 @@ extern const long interval_2;
 extern int buttons_mode;
 
 void initial_mode();
-void game_mode();
+void game_mode(DualMatrixController *screen, Breakout *game);
 void configuration_mode();
 void initiate_buttons();
 

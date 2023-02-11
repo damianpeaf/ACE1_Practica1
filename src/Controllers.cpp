@@ -23,6 +23,7 @@ bool btn_init_pressed = false;
 // Use millis to capture the time, intervals and modes
 unsigned long timeMillis;
 unsigned long previousMillis = 0;
+unsigned long updateMillis = 0;
 const long interval = 3000;
 const long interval_2 = 2000;
 int buttons_mode = 0; // 0 is the first mode to control the text loop, 1 to control the game mode, and 2 the pause / configurate mode
@@ -65,7 +66,28 @@ void initial_mode() {
 }
 
 // Game logic for buttons
-void game_mode() {
+void game_mode(DualMatrixController *screen, Breakout *game) {
+
+  // * GAME LOST/WON
+
+  // * GAME PAUSED
+  // TODO: add a pause function
+
+  // * CONTROL INPUTS
+  if(digitalRead(BTN_IZQ) == LOW && last_btn_left_state == HIGH){
+    Serial.println("Moving paddle left");
+    game -> movePaddleLeft();
+    game->refreshMatrix();
+    // delay(50); // ?
+  }    
+
+  if(digitalRead(BTN_DER) == LOW && last_btn_right_state == HIGH){
+    Serial.println("Moving paddle right");
+    game -> movePaddleRight();
+    game->refreshMatrix();
+    // delay(50); // ?
+  }  
+
   if(digitalRead(BTN_INIT) == LOW){
     // first check in what mode the app is
     if((millis() - previousMillis) >= interval){
@@ -78,20 +100,20 @@ void game_mode() {
     previousMillis = millis();
   } 
   
-  if(digitalRead(BTN_IZQ) == LOW && last_btn_left_state == HIGH){
-    Serial.println("MOVE TO LEFT!");
-    delay(50); 
-     
-  }    
-
-  if(digitalRead(BTN_DER) == LOW && last_btn_right_state == HIGH){
-    Serial.println("MOVE TO RIGHT!");
-    delay(50); 
-    
-  }  
   last_btn_left_state = digitalRead(BTN_IZQ); 
   last_btn_init_state = digitalRead(BTN_INIT); 
-  last_btn_right_state = digitalRead(BTN_DER); 
+  last_btn_right_state = digitalRead(BTN_DER);
+
+  // * UPDATE GAME
+
+  if (millis() - updateMillis >= 1000) {
+    updateMillis = millis();
+    game->update();
+    game->refreshMatrix();
+  }
+
+  screen->setMatrix(game -> matrix);
+
 }
 
 // Configurate/pause logic for buttons
