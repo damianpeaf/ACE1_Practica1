@@ -181,7 +181,7 @@ void loop() {
         if (millis() - actualTime > 100) {
           actualTime = millis();
           cycleMessageRight();
-        }        
+        }        al 
       }
       initial_mode();
       break;
