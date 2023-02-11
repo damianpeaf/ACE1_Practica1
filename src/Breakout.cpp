@@ -7,6 +7,17 @@ Brick::Brick(int xPos, int yPos) {
     this -> yPos = yPos;
 }
 
+Paddle::Paddle(int xPos, int yPos) {
+    this -> xPos = xPos;
+    this -> yPos = yPos;
+}
+
+Ball::Ball(int speedX, int speedY) {
+    this -> speedX = speedX;
+    this -> speedY = speedY;
+}
+
+
 void Brick::setNextBrick(Brick *brick) {
     this -> nextBrick = brick;
 }
@@ -41,16 +52,7 @@ void Breakout::reset() {
     }
 
     // Create the paddle
-    for (j = 6; j < 11; j++){
-        Paddle lPaddle(7, j);
-        Paddle rPaddle(7, j + 1);
-
-        lPaddle.setNextPaddle(&rPaddle);
-        rPaddle.setNextPaddle(&lPaddle);
-
-        this -> table[7][j] = &lPaddle;
-        this -> table[7][j+1] = &rPaddle;
-    }
+    Paddle paddle(7, 7);
 
     // Create the ball
     Ball ball(3, 8);
