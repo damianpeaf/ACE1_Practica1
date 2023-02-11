@@ -7,10 +7,11 @@ class GameObject {
 
 class Ball: public GameObject {
     public: 
-        Ball(int targetX, int targetY);
+        Ball(int speedX, int speedY);
 
-        int targetX;
-        int targetY;
+
+        int speedX;
+        int speedY;
         int velocity = 1500;
 
         void getNextPosition();
