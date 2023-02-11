@@ -19,10 +19,7 @@ Breakout breakout;
 const int BTN_IZQ = 5;
 const int BTN_INIT = 6;
 const int BTN_DER = 7;
-
-int btn_left_state;
-int btn_init_state;
-int btn_right_state;
+const int POTR = A0;
 
 int last_btn_left_state = HIGH;
 int last_btn_init_state = HIGH;
@@ -52,11 +49,8 @@ void setup() {
 }
 
 void initial_mode() {
-  int btn_left_state = digitalRead(BTN_IZQ);
-  int btn_init_state = digitalRead(BTN_INIT);
-  int btn_right_state = digitalRead(BTN_DER);
   
-  if(btn_init_state == LOW){
+  if(digitalRead(BTN_INIT) == LOW){
     // first check in what mode the app is
     if((millis() - previousMillis) >= interval){
       previousMillis = millis(); // capture the time when the mode was changed
@@ -69,29 +63,26 @@ void initial_mode() {
     previousMillis = millis();
   } 
   
-  if(btn_left_state == LOW && last_btn_left_state == HIGH){
+  if(digitalRead(BTN_IZQ) == LOW && last_btn_left_state == HIGH){
     controller_init_matrix = false;
     Serial.println("Change the move of the loop text from left to right");
     delay(50); 
   }    
 
-  if(btn_right_state == LOW && last_btn_right_state == HIGH){
+  if(digitalRead(BTN_DER) == LOW && last_btn_right_state == HIGH){
     controller_init_matrix = true;
     Serial.println("Change the move of the loop text from right to left");
     delay(50);
   }  
   
-  last_btn_left_state = btn_left_state; 
-  last_btn_init_state = btn_init_state; 
-  last_btn_right_state = btn_right_state; 
+  last_btn_left_state = digitalRead(BTN_IZQ); 
+  last_btn_init_state = digitalRead(BTN_INIT); 
+  last_btn_right_state = digitalRead(BTN_DER); 
      
 
 }
 void game_mode() {
-  int btn_left_state = digitalRead(BTN_IZQ);
-  int btn_init_state = digitalRead(BTN_INIT);
-  int btn_right_state = digitalRead(BTN_DER);
-  if(btn_init_state == LOW){
+  if(digitalRead(BTN_INIT) == LOW){
     // first check in what mode the app is
     if((millis() - previousMillis) >= interval){
       previousMillis = millis(); // capture the time when the mode was changed
@@ -103,27 +94,24 @@ void game_mode() {
     previousMillis = millis();
   } 
   
-  if(btn_left_state == LOW && last_btn_left_state == HIGH){
+  if(digitalRead(BTN_IZQ) == LOW && last_btn_left_state == HIGH){
     Serial.println("MOVE TO LEFT!");
     delay(50); 
      
   }    
 
-  if(btn_right_state == LOW && last_btn_right_state == HIGH){
+  if(digitalRead(BTN_DER) == LOW && last_btn_right_state == HIGH){
     Serial.println("MOVE TO RIGHT!");
     delay(50); 
     
   }  
-  last_btn_left_state = btn_left_state; 
-  last_btn_init_state = btn_init_state; 
-  last_btn_right_state = btn_right_state; 
+  last_btn_left_state = digitalRead(BTN_IZQ); 
+  last_btn_init_state = digitalRead(BTN_INIT); 
+  last_btn_right_state = digitalRead(BTN_DER); 
 }
 void configuration_mode() {
-  int btn_left_state = digitalRead(BTN_IZQ);
-  int btn_init_state = digitalRead(BTN_INIT);
-  int btn_right_state = digitalRead(BTN_DER);
 
-  if(btn_init_state == LOW){
+  if(digitalRead(BTN_INIT) == LOW){
     if(!btn_init_pressed){
       btn_init_start_time = millis();
       btn_init_pressed = true;
@@ -149,36 +137,36 @@ void configuration_mode() {
     }
   }
   
-  if(btn_left_state == LOW && last_btn_left_state == HIGH){
+  if(digitalRead(BTN_IZQ) == LOW && last_btn_left_state == HIGH){
     Serial.println("SEE REMAINING LIFES");
     delay(50); 
      
   }    
 
-  if(btn_right_state == LOW && last_btn_right_state == HIGH){
+  if(digitalRead(BTN_DER) == LOW && last_btn_right_state == HIGH){
     Serial.println("CHANGE VOLUME");
     delay(50); 
     
   }  
-  last_btn_left_state = btn_left_state; 
-  last_btn_init_state = btn_init_state; 
-  last_btn_right_state = btn_right_state; 
+  last_btn_left_state = digitalRead(BTN_IZQ); 
+  last_btn_init_state = digitalRead(BTN_INIT); 
+  last_btn_right_state = digitalRead(BTN_DER); 
 }
+
 void loop() {
   // put your main code here, to run repeatedly:
   // evaluate the status of the buttons to know in which case we are
   switch (buttons_mode) {
     case 0:
       // Serial.println("Running the text in a loop, waiting for a new instruction");
+      screen.setMatrix(resizedMessage);
       if(!controller_init_matrix){
-        screen.setMatrix(resizedMessage);
-        if (millis() - actualTime > 100) {
+        if (millis() - actualTime > map(analogRead(POTR), 0, 255, 40, 100)) {
           actualTime = millis();
           cycleMessageLeft();
         }
       }else {
-        screen.setMatrix(resizedMessage);
-        if (millis() - actualTime > 100) {
+        if (millis() - actualTime > map(analogRead(POTR), 0, 255, 40, 100)) {
           actualTime = millis();
           cycleMessageRight();
         }        
