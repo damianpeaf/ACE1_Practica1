@@ -51,11 +51,28 @@ void Breakout::reset() {
         }
     }
 
+
     // Create the paddle
     Paddle paddle(7, 7);
+    Paddle paddle2(7, 8);
+    Paddle paddle3(7, 9);
+    Paddle paddle4(7, 10);
+    Paddle paddle5(7, 11);
+
+    paddle.setNextPaddle(&paddle2);
+    paddle2.setNextPaddle(&paddle3);
+    paddle3.setNextPaddle(&paddle4);
+    paddle4.setNextPaddle(&paddle5);
+    paddle5.setNextPaddle(&paddle);
+
+    this -> table[7][7] = &paddle;
+    this -> table[7][8] = &paddle2;
+    this -> table[7][9] = &paddle3;
+    this -> table[7][10] = &paddle4;
+    this -> table[7][11] = &paddle5;
 
     // Create the ball
-    Ball ball(3, 8);
+    Ball ball(1, 1);
     this -> table[6][8] = &ball;
     
 }
