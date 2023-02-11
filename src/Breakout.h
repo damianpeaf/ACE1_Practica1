@@ -15,7 +15,7 @@ class Ball: public GameObject {
         int velocity = 1500;
 
         void getNextPosition();
-}
+};
 
 class Paddle: public GameObject {
     public: 
@@ -27,10 +27,10 @@ class Paddle: public GameObject {
         Paddle *nextPaddle;
 
         void moveLeft();
-        void moveRight()
+        void moveRight();
 
         void setNextPaddle(Paddle *paddle);
-}
+};
 
 
 class Brick: public GameObject {
