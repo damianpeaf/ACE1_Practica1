@@ -10,6 +10,7 @@
 
 #include <LedControl.h>
 
+#include "Controllers.h"
 #include "DualMatrixController.h"
 #include "Breakout.h"
 #include "utils.h"
@@ -35,20 +36,45 @@ void setup() {
   screen.initMatrix();
   breakout.reset();
   cycleMessageLeft();
-
+  initiate_buttons();
 }
 
 void loop() {
 
-  // TEST BREAKOUT 
-  // breakout.refreshMatrix();
-  // screen.setMatrix(breakout.matrix);
+  // evaluate the status of the buttons to know in which case we are
+  switch (buttons_mode) {
 
-  screen.setMatrix(resizedMessage);
-
-  if (millis() - actualTime > 100) {
-    actualTime = millis();
-    cycleMessageLeft();
+    // Initial Message MODE
+    case 0:
+      // Serial.println("Running the text in a loop, waiting for a new instruction");
+      screen.setMatrix(resizedMessage);
+      if(!controller_init_matrix){
+        if (millis() - actualTime > map(analogRead(POTR), 0, 255, 40, 100)) {
+          actualTime = millis();
+          cycleMessageLeft();
+        }
+      }else {
+        if (millis() - actualTime > map(analogRead(POTR), 0, 255, 40, 100)) {
+          actualTime = millis();
+          cycleMessageRight();
+        }        
+      }
+      initial_mode();
+      break;
+    
+    // Game MODE
+    case 1:
+      // Serial.println("Running the game, waiting to move or configuration mode");
+      breakout.refreshMatrix();
+      screen.setMatrix(breakout.matrix);
+      game_mode();
+      break;
+    
+    // Configuration MODE
+    case 2:
+      // Serial.println("Running the configuration screen, waiting to see lifes or change volumen or return");
+      configuration_mode();
+      break;
   }
 
 }
