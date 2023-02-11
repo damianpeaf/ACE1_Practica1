@@ -169,7 +169,7 @@ void loop() {
         if (millis() - actualTime > map(analogRead(POTR), 0, 255, 40, 100)) {
           actualTime = millis();
           cycleMessageRight();
-        }        
+        }        al 
       }
       initial_mode();
       break;
