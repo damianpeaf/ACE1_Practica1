@@ -1,7 +1,6 @@
 // IMPORTS
 #include <LedControl.h>
 #include "DualMatrixController.h"
-#include "Breakout.h"
 #include "utils.h"
 // MATRIX 
 bool controller_init_matrix = false;
@@ -13,7 +12,7 @@ NoDriverMatrix leftMatrix(leftMatrixRowPins, leftMatrixColumnPins);
 LedControl rightMatrix(11, 13, 10, 1);
 DualMatrixController screen(&leftMatrix, &rightMatrix);
 unsigned long actualTime = millis();
-Breakout breakout;
+
 
 // Botons to manage all
 const int BTN_IZQ = 5;
@@ -44,12 +43,21 @@ void setup() {
   pinMode(BTN_DER, INPUT_PULLUP);
   // INIT MATRIX
   screen.initMatrix();
-  breakout.reset();
   cycleMessageLeft();  
 }
-
-void initial_mode() {
-  
+void move_left_0(){
+  if(digitalRead(BTN_IZQ) == LOW && last_btn_left_state == HIGH){
+    controller_init_matrix = false;
+    Serial.println("Change the move of the loop text from left to right");
+  }   
+}
+void move_right_0() {
+  if(digitalRead(BTN_DER) == LOW && last_btn_right_state == HIGH){
+    controller_init_matrix = true;
+    Serial.println("Change the move of the loop text from right to left");
+  }  
+}
+void change_init_0(){
   if(digitalRead(BTN_INIT) == LOW){
     // first check in what mode the app is
     if((millis() - previousMillis) >= interval){
@@ -58,30 +66,34 @@ void initial_mode() {
       Serial.println("INIT button was changed to game mode");
       Serial.println("Button Middle held for 3 seconds");
       controller_init_matrix = false;
+      return true;
     }               
   } else {
     previousMillis = millis();
-  } 
-  
-  if(digitalRead(BTN_IZQ) == LOW && last_btn_left_state == HIGH){
-    controller_init_matrix = false;
-    Serial.println("Change the move of the loop text from left to right");
-    delay(50); 
-  }    
-
-  if(digitalRead(BTN_DER) == LOW && last_btn_right_state == HIGH){
-    controller_init_matrix = true;
-    Serial.println("Change the move of the loop text from right to left");
-    delay(50);
   }  
-  
+}
+void initial_mode() {
+  change_init_0();
+  move_left_0();
+  move_right_0();
+    
   last_btn_left_state = digitalRead(BTN_IZQ); 
   last_btn_init_state = digitalRead(BTN_INIT); 
   last_btn_right_state = digitalRead(BTN_DER); 
-     
-
 }
-void game_mode() {
+
+void move_left_1(){
+  if(digitalRead(BTN_IZQ) == LOW && last_btn_left_state == HIGH){
+    Serial.println("MOVE TO LEFT!");
+  }
+}
+void move_right_1() {
+  if(digitalRead(BTN_DER) == LOW && last_btn_right_state == HIGH){
+    Serial.println("MOVE TO RIGHT!");      
+  }  
+}
+
+void change_init_1(){
   if(digitalRead(BTN_INIT) == LOW){
     // first check in what mode the app is
     if((millis() - previousMillis) >= interval){
@@ -89,100 +101,91 @@ void game_mode() {
       buttons_mode = 2;
       Serial.println("INIT button was changed to configurate mode");
       Serial.println("Button Middle held for 3 seconds");
+      configuration_mode();
     }               
   } else {
     previousMillis = millis();
   } 
-  
-  if(digitalRead(BTN_IZQ) == LOW && last_btn_left_state == HIGH){
-    Serial.println("MOVE TO LEFT!");
-    delay(50); 
-     
-  }    
+}
+void game_mode() {
+  screen.initMatrix();
+  change_init_1();
+  move_left_1();    
+  move_right_1();
 
-  if(digitalRead(BTN_DER) == LOW && last_btn_right_state == HIGH){
-    Serial.println("MOVE TO RIGHT!");
-    delay(50); 
-    
-  }  
   last_btn_left_state = digitalRead(BTN_IZQ); 
   last_btn_init_state = digitalRead(BTN_INIT); 
-  last_btn_right_state = digitalRead(BTN_DER); 
+  last_btn_right_state = digitalRead(BTN_DER);
 }
-void configuration_mode() {
 
-  if(digitalRead(BTN_INIT) == LOW){
-    if(!btn_init_pressed){
-      btn_init_start_time = millis();
-      btn_init_pressed = true;
-    }else {
-      if((millis()- btn_init_start_time) >= interval){
-        previousMillis = millis(); // capture the time when the mode was changed
-        buttons_mode = 0;
-        btn_init_pressed = false;                
-        Serial.println("THE GAME WAS CANCELED!");
-        Serial.println("Button Middle held for 3 seconds");   
-      }
-      else if((millis() - previousMillis) >= interval){
-      previousMillis = millis(); // capture the time when the mode was changed
-      buttons_mode = 1;
-      btn_init_pressed = false;  
-      Serial.println("RESUMING GAME!");
-      Serial.println("Button Middle held for 2 seconds");
-      }
-    }
-  }else {
-    if(btn_init_pressed) {
-      btn_init_pressed = false;      
-    }
-  }
-  
+void move_left_2(){
   if(digitalRead(BTN_IZQ) == LOW && last_btn_left_state == HIGH){
     Serial.println("SEE REMAINING LIFES");
-    delay(50); 
-     
-  }    
-
+  }  
+}
+void move_right_2(){
   if(digitalRead(BTN_DER) == LOW && last_btn_right_state == HIGH){
     Serial.println("CHANGE VOLUME");
-    delay(50); 
-    
   }  
+}
+void configuration_mode() {
+  if(digitalRead(BTN_INIT) == LOW){
+
+    btn_init_start_time = millis();
+    while(digitalRead(BTN_INIT) == LOW){
+      //  
+    }
+    unsigned long restTime = millis();
+    
+    Serial.println(restTime - btn_init_start_time);
+    if((restTime - btn_init_start_time) >= 3000){
+      previousMillis = millis(); // capture the time when the mode was changed
+      buttons_mode = 0;
+      btn_init_pressed = false;  
+      Serial.println("THE GAME WAS CANCELED!");
+      Serial.println("Button Middle held for 3 seconds");  
+    }
+    else if((restTime - btn_init_start_time) >= 2000){
+      previousMillis = millis(); // capture the time when the mode was changed
+      buttons_mode = 1;
+      btn_init_pressed = false;
+      Serial.println("RESUMING GAME!");
+      Serial.println("Button Middle held for 2 seconds");                
+    }
+  }
+
+  move_left_2();
+  move_right_2();
+
   last_btn_left_state = digitalRead(BTN_IZQ); 
   last_btn_init_state = digitalRead(BTN_INIT); 
-  last_btn_right_state = digitalRead(BTN_DER); 
+  last_btn_right_state = digitalRead(BTN_DER);
+
 }
+
+void mode_0() {
+  while(buttons_mode != 1){
+    initial_mode();
+    screen.setMatrix(resizedMessage);
+    if(!controller_init_matrix){
+      if (millis() - actualTime > map(analogRead(POTR), 0, 255, 40, 100)) {
+        actualTime = millis();
+        cycleMessageLeft();
+      }
+    }else {
+      if (millis() - actualTime > map(analogRead(POTR), 0, 255, 40, 100)) {
+        actualTime = millis();
+        cycleMessageRight();
+      }         
+    }
+  }
+}
+
+
 
 void loop() {
   // put your main code here, to run repeatedly:
   // evaluate the status of the buttons to know in which case we are
-  switch (buttons_mode) {
-    case 0:
-      // Serial.println("Running the text in a loop, waiting for a new instruction");
-      screen.setMatrix(resizedMessage);
-      if(!controller_init_matrix){
-        if (millis() - actualTime > map(analogRead(POTR), 0, 255, 40, 100)) {
-          actualTime = millis();
-          cycleMessageLeft();
-        }
-      }else {
-        if (millis() - actualTime > map(analogRead(POTR), 0, 255, 40, 100)) {
-          actualTime = millis();
-          cycleMessageRight();
-        }        al 
-      }
-      initial_mode();
-      break;
-    case 1:
-      // Serial.println("Running the game, waiting to move or configuration mode");
-      breakout.refreshMatrix();
-      screen.setMatrix(breakout.matrix);
-      game_mode();
-      break;
-    case 2:
-      // Serial.println("Running the configuration screen, waiting to see lifes or change volumen or return");
-      configuration_mode();
-      break;
-  }
-
+  mode_0();
+  game_mode();
 }
