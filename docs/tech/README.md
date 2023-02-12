@@ -37,7 +37,7 @@ El objetivo del prototipo es el manejo de matrices de dos maneras: por medio de 
 # **Montaje del Hardware**
 A continuación se explica la conexión entre la placa Arduino MEGA y los demás componentes.
 - Conexión para Comunicación Serial: Se utilizaron los pines RXO Y TX0. 
-![Proteus Ejecutado](images\tecnico\instalacion1.jpg)
+![Proteus Ejecutado](https://gitlab.com/grupo-7-ace1b-1s2023/ACE1-231S0778BG07PRA1/-/tree/main/docs/tech/images/tecnico/instalacion1.jpg)
 - Conexión con los botones: se utilizaron los pines 5, 6 y 7.
 ![Proteus Ejecutado](images\tecnico\instalacion2.jpg)
 - Conexión con el sounder: se utilizó el pin 8. <br>
