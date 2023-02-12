@@ -198,7 +198,13 @@ void Breakout::update(){
 
     // -- Ball collision with brick
     else if (collidedObject -> objectType == 3){
-        this -> ball -> invertrowSpeed();
+        
+        if( this -> ball -> rowSpeed == -1){
+            this -> ball -> invertrowSpeed();
+        }else{
+            this -> ball -> invertcolumnSpeed();
+        }
+
         destroyBrick((Brick *) collidedObject);
         Serial.println("Brick collision");
     }
