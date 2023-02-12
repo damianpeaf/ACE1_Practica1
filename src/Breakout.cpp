@@ -152,8 +152,11 @@ void Breakout::movePaddleRight(){
 void Breakout::update(){
 
     // * Table info
-    int newobjectRow = (this -> ball -> objectRow) + (this -> ball -> rowSpeed);
-    int newobjectColumn = (this -> ball -> objectColumn) + (this -> ball -> columnSpeed);
+    int newobjectRow = this->ball->getNewobjectRow();
+    int newobjectColumn =this->ball-> getNewobjectColumn();
+
+    Serial.println("CURRENT Object row: " + String(this -> ball -> objectRow) + ", CURRENT Object column: " + String(this -> ball -> objectColumn));
+    Serial.println("TARGET Object row: " + String(newobjectRow) + ", TARGET Object column: " + String(newobjectColumn));
 
     GameObject *collidedObject;
 
@@ -179,7 +182,7 @@ void Breakout::update(){
     }
 
     // -- Ball collision with the floor
-    else if(newobjectRow > 7){
+    else if(newobjectRow > 8){
         lifeLost();
         Serial.println("Collision with the floor");
     }
@@ -259,11 +262,10 @@ void Breakout::moveBall(){
 
     // update ball position in the table
     this -> table[this -> ball -> objectRow][this -> ball -> objectColumn] = this -> ball;
+
 }
 
 void Breakout::destroyBrick(Brick *brick){
-    Serial.println("Brick collision function");
-
     this -> score += 1;
     this -> table [brick -> objectRow][brick -> objectColumn] = nullptr;
     this -> table [brick -> nextBrick -> objectRow][brick -> nextBrick -> objectColumn] = nullptr;
@@ -275,6 +277,7 @@ void Breakout::destroyBrick(Brick *brick){
 
 void Breakout::lifeLost(){
     this -> hp -= 1;
+    reset();
     if(this -> hp == 0){
         this -> hasLost = true;
     }
