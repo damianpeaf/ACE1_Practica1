@@ -154,10 +154,6 @@ void Breakout::update(){
     // * Table info
     int newobjectRow = this->ball->getNewobjectRow();
     int newobjectColumn =this->ball-> getNewobjectColumn();
-
-    Serial.println("CURRENT Object row: " + String(this -> ball -> objectRow) + ", CURRENT Object column: " + String(this -> ball -> objectColumn));
-    Serial.println("TARGET Object row: " + String(newobjectRow) + ", TARGET Object column: " + String(newobjectColumn));
-
     GameObject *collidedObject = checkTablePosition(newobjectRow, newobjectColumn);
 
     // * Collision detection
@@ -166,24 +162,20 @@ void Breakout::update(){
     // -- Ball collision with lateral walls
     if(newobjectColumn < 0 || newobjectColumn > 15){
         this -> ball -> invertcolumnSpeed();
-        Serial.println("Collision with lateral walls");
     }
 
     // -- Ball collision with the roof
     else if(newobjectRow < 0){
         this -> ball -> invertrowSpeed();
-        Serial.println("Collision with the roof");
     }
 
     // -- Ball collision with the floor
     else if(newobjectRow > 8){
         lifeLost();
-        Serial.println("Collision with the floor");
     }
     
     // -- empty space collision
     else if(collidedObject == nullptr){
-        Serial.println("Empty space collision");
         moveBall();
         return;
     }
@@ -193,20 +185,16 @@ void Breakout::update(){
     else if (collidedObject -> objectType == 2){
         // ? TODO: make the ball bounce in a different way depending on the paddle position
         this -> ball -> invertrowSpeed();
-        Serial.println("Paddle collision " + String(collidedObject -> objectRow) + ", " + String(collidedObject -> objectColumn));
     }
 
     // -- Ball collision with brick
     else if (collidedObject -> objectType == 3){
-        
         if( this -> ball -> rowSpeed == -1){
             this -> ball -> invertrowSpeed();
         }else{
             this -> ball -> invertcolumnSpeed();
         }
-
         destroyBrick((Brick *) collidedObject);
-        Serial.println("Brick collision");
     }
 
     // Check next posible collision
@@ -214,7 +202,6 @@ void Breakout::update(){
     this -> hasCollided = true;
 
     if (collidedObject == nullptr){
-        Serial.println("MOBVING BALL WITHOUT COLLISION");
         moveBall();
     }else{
         update(); 

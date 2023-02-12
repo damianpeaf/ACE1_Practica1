@@ -5,6 +5,8 @@ const int BTN_IZQ = 5;
 const int BTN_INIT = 6;
 const int BTN_DER = 7;
 const int POTR = A0;
+const int BUZZER = 8;
+int buzzer_freq = 500;
 
 
 // Button previous states
@@ -27,7 +29,6 @@ unsigned long updateMillis = 0;
 const long interval = 3000;
 const long interval_2 = 2000;
 int buttons_mode = 0; // 0 is the first mode to control the text loop, 1 to control the game mode, and 2 the pause / configurate mode
-
 
 
 // Initial Message logic for buttons
@@ -68,10 +69,7 @@ void initial_mode() {
 // Game logic for buttons
 void game_mode(DualMatrixController *screen, Breakout *game) {
 
-  // * GAME LOST/WON
-
-  // * GAME PAUSED
-  // TODO: add a pause function
+  // TODO: RESET THE GAME FOR FIRST TIME
 
   // * CONTROL INPUTS
   if(digitalRead(BTN_IZQ) == LOW && last_btn_left_state == HIGH){
@@ -107,6 +105,28 @@ void game_mode(DualMatrixController *screen, Breakout *game) {
   if (millis() - updateMillis >= 1000) {
     updateMillis = millis();
     game->update();
+
+    // * GAME LOST/WON
+
+    if(game -> hasLost){
+      Serial.println("GAME OVER");
+      // TODO: SHOW SCORE
+      buttons_mode = 0;
+    }
+
+    if(game -> hasWon){
+        Serial.println("YOU WON");
+        sound_buzzer(1500);
+        delay(1500);
+        buttons_mode = 0;
+    }
+
+    // * Collision detection
+    if (game -> hasCollided){
+      sound_buzzer(100);
+      game -> hasCollided = false;
+    }
+
     game->refreshMatrix();
   }
 
@@ -163,4 +183,12 @@ void initiate_buttons() {
   pinMode(BTN_IZQ, INPUT_PULLUP);
   pinMode(BTN_INIT, INPUT_PULLUP);
   pinMode(BTN_DER, INPUT_PULLUP);
+}
+
+void initiate_buzzer() {
+  pinMode(BUZZER, OUTPUT);
+}
+
+void sound_buzzer(int duration) {
+  tone(BUZZER, buzzer_freq, duration);
 }

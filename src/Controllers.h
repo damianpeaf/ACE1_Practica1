@@ -9,8 +9,13 @@
 extern const int BTN_IZQ;
 extern const int BTN_INIT;
 extern const int BTN_DER;
+
+// Potenciometer PIN
 extern const int POTR;
 
+// Buzzer PIN
+extern const int BUZZER;
+extern int buzzer_freq;
 
 // Button previous states
 extern int last_btn_left_state;
@@ -36,5 +41,6 @@ void initial_mode();
 void game_mode(DualMatrixController *screen, Breakout *game);
 void configuration_mode();
 void initiate_buttons();
+void sound_buzzer(int duration);
 
 #endif
