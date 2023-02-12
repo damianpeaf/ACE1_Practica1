@@ -28,7 +28,6 @@ void Paddle::setNextPaddle(Paddle *paddle) {
 void Paddle::moveLeft() {
     if(this -> objectColumn > 0){
         this -> objectColumn--;
-        Serial.println("MOVING TO " + String(this -> objectColumn));
         if (this -> nextPaddle != nullptr){
             this -> nextPaddle -> moveLeft();
         }
@@ -71,17 +70,10 @@ void Ball::invertrowSpeed() {
 }
 
 int Ball::getNewobjectRow() {
-    Serial.print("Ball row: " + String(this -> objectRow));
-    Serial.println(" | Speed: " + String(this -> rowSpeed));
-    Serial.println("New row: " + String((this -> objectRow) + (this -> rowSpeed)));
     return  (this -> objectRow) + (this -> rowSpeed); 
 }
 
 int Ball::getNewobjectColumn() {
-
-    Serial.print("Ball column: " + String(this -> objectColumn));
-    Serial.println(" | Speed: " + String(this -> columnSpeed));
-    Serial.println("New column: " + String((this -> objectColumn) + (this -> columnSpeed)));
     return  (this -> objectColumn) + (this -> columnSpeed); 
 }
 
@@ -105,49 +97,44 @@ void Breakout::reset() {
     // Create the bricks
     for(int i = 0; i < 4; i++){
         for (int j = 0 ; j < 16; j+= 2){
-            Brick rBrick(i,j + 1);
-            Brick lBrick(i,j);
+            Brick *rBrick = new Brick(i,j + 1);
+            Brick *lBrick = new Brick(i,j);
 
-            lBrick.setNextBrick(&rBrick);
-            rBrick.setNextBrick(&lBrick);
+            lBrick->setNextBrick(rBrick);
+            rBrick->setNextBrick(lBrick);
 
-            this -> table[i][j] = &lBrick;
-            this -> table[i][j+1] = &rBrick;
+            this -> table[i][j] = lBrick;
+            this -> table[i][j+1] = rBrick;
         }
     }
 
 
     // Create the paddle
-    Paddle paddle(7,6);
-    Paddle paddle2(7,7);
-    Paddle paddle3(7,8);
-    Paddle paddle4(7,9);
-    Paddle paddle5(7,10);
-    paddle.setNextPaddle(&paddle2);
-    paddle2.setNextPaddle(&paddle3);
-    paddle3.setNextPaddle(&paddle4);
-    paddle4.setNextPaddle(&paddle5);
-    paddle5.setNextPaddle(nullptr);
+    Paddle *paddle = new Paddle(7,6);
+    Paddle *paddle2 = new Paddle(7,7);
+    Paddle *paddle3 = new Paddle(7,8);
+    Paddle *paddle4 = new Paddle(7,9);
+    Paddle *paddle5 = new Paddle(7,10);
+    paddle->setNextPaddle(paddle2);
+    paddle2->setNextPaddle(paddle3);
+    paddle3->setNextPaddle(paddle4);
+    paddle4->setNextPaddle(paddle5);
+    paddle5->setNextPaddle(nullptr);
 
-    this -> rootPaddle = &paddle;
-    this -> table[7][6] = &paddle;
-    this -> table[7][7] = &paddle2;
-    this -> table[7][8] = &paddle3;
-    this -> table[7][9] = &paddle4;
-    this -> table[7][10] = &paddle5;
+    this -> rootPaddle = paddle;
+    this -> table[7][6] = paddle;
+    this -> table[7][7] = paddle2;
+    this -> table[7][8] = paddle3;
+    this -> table[7][9] = paddle4;
+    this -> table[7][10] = paddle5;
     
     // Create the ball
-    Ball ball = Ball();
-    ball.setSpeed(-1, 1);
+    Ball *b = new Ball();
+    b->setSpeed(-1, 1);
+    b->setPos(6, 8);
 
-    // TODO: aleatorize the ball position
-    ball.setPos(6, 8);
-
-    // ??????????????????
-    Serial.println("Ball pos: " + String(ball.objectRow) + " " + String(ball.objectColumn));
-
-    this -> ball = &ball;
-    this -> table[6][8] = &ball;
+    this -> ball = b;
+    this -> table[6][8] = b;
 }
 
 
@@ -164,13 +151,9 @@ void Breakout::movePaddleRight(){
 
 void Breakout::update(){
 
-    Serial.println("ACTUAL Ball pos: " + String(ball -> objectRow) + " " + String(ball -> objectColumn));
-
     // * Table info
     int newobjectRow = (this -> ball -> objectRow) + (this -> ball -> rowSpeed);
     int newobjectColumn = (this -> ball -> objectColumn) + (this -> ball -> columnSpeed);
-
-    Serial.println("TARGET object pos: " + String(newobjectRow) + " " + String(newobjectColumn));
 
     GameObject *collidedObject;
 
@@ -262,21 +245,20 @@ void Breakout::movePaddle(){
     Paddle *auxPaddle = this -> rootPaddle;
     while (auxPaddle != nullptr){
         this -> table[auxPaddle -> objectRow][auxPaddle -> objectColumn] = auxPaddle;
-        Serial.println("Paddle pos: " + String(auxPaddle -> objectRow) + " " + String(auxPaddle -> objectColumn));
         auxPaddle = auxPaddle -> nextPaddle;
     }
 }
 
 void Breakout::moveBall(){
-    // // clear ball position
-    // this -> table[this -> ball -> objectRow][this -> ball -> objectColumn] = nullptr;
+    // clear ball position
+    this -> table[this -> ball -> objectRow][this -> ball -> objectColumn] = nullptr;
 
-    // // update ball position
-    // this -> ball -> objectRow = this -> ball -> getNewobjectRow();
-    // this -> ball -> objectColumn = this -> ball -> getNewobjectColumn();
+    // update ball position
+    this -> ball -> objectRow = this -> ball -> getNewobjectRow();
+    this -> ball -> objectColumn = this -> ball -> getNewobjectColumn();
 
-    // // update ball position in the table
-    // this -> table[this -> ball -> objectRow][this -> ball -> objectColumn] = this -> ball;
+    // update ball position in the table
+    this -> table[this -> ball -> objectRow][this -> ball -> objectColumn] = this -> ball;
 }
 
 void Breakout::destroyBrick(Brick *brick){
