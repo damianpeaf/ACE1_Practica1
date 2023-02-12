@@ -75,14 +75,12 @@ void game_mode(DualMatrixController *screen, Breakout *game) {
 
   // * CONTROL INPUTS
   if(digitalRead(BTN_IZQ) == LOW && last_btn_left_state == HIGH){
-    Serial.println("Moving paddle left");
     game -> movePaddleLeft();
     game->refreshMatrix();
     // delay(50); // ?
   }    
 
   if(digitalRead(BTN_DER) == LOW && last_btn_right_state == HIGH){
-    Serial.println("Moving paddle right");
     game -> movePaddleRight();
     game->refreshMatrix();
     // delay(50); // ?

@@ -75,7 +75,6 @@ class Breakout {
         void movePaddleRight();
 
         void refreshMatrix();
-        void printMatrix();
 
     private:
         // props
@@ -88,6 +87,9 @@ class Breakout {
         void moveBall();
         void lifeLost();
         void destroyBrick(Brick *brick);
+        void updateBallPosition();
+        void resetGameLifeLost();
+        GameObject* checkTablePosition(int row, int column);
 };
 
 #endif

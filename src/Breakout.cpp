@@ -158,13 +158,7 @@ void Breakout::update(){
     Serial.println("CURRENT Object row: " + String(this -> ball -> objectRow) + ", CURRENT Object column: " + String(this -> ball -> objectColumn));
     Serial.println("TARGET Object row: " + String(newobjectRow) + ", TARGET Object column: " + String(newobjectColumn));
 
-    GameObject *collidedObject;
-
-    if (newobjectRow < 0 || newobjectRow > 7 || newobjectColumn < 0 || newobjectColumn > 15){
-        collidedObject = nullptr;
-    } else {
-        collidedObject = this -> table[newobjectRow][newobjectColumn];
-    }
+    GameObject *collidedObject = checkTablePosition(newobjectRow, newobjectColumn);
 
     // * Collision detection
 
@@ -205,15 +199,33 @@ void Breakout::update(){
     // -- Ball collision with brick
     else if (collidedObject -> objectType == 3){
         this -> ball -> invertrowSpeed();
-        this -> hasCollided = true;
         destroyBrick((Brick *) collidedObject);
         Serial.println("Brick collision");
     }
 
-    // * New position
+    // Check next posible collision
+    collidedObject = checkTablePosition(this->ball->getNewobjectRow(), this->ball-> getNewobjectColumn());
     this -> hasCollided = true;
-    moveBall();
 
+    if (collidedObject == nullptr){
+        Serial.println("MOBVING BALL WITHOUT COLLISION");
+        moveBall();
+    }else{
+        update(); 
+    }
+
+}
+
+GameObject* Breakout::checkTablePosition(int row, int column){
+    GameObject *collidedObject;
+
+    if (row < 0 || row > 7 || column < 0 || column > 15){
+        collidedObject = nullptr;
+    } else {
+        collidedObject = this -> table[row][column];
+    }
+
+    return collidedObject;
 }
 
 void Breakout::refreshMatrix(){
@@ -225,16 +237,6 @@ void Breakout::refreshMatrix(){
                 this-> matrix[i][j] = 0;
             }
         }
-    }
-}
-
-void Breakout::printMatrix(){
-    for(int i = 0; i < 8; i++){
-        for (int j = 0 ; j < 16; j++){
-            Serial.print(this -> matrix[i][j]);
-            Serial.print(" ");
-        }
-        Serial.println();
     }
 }
 
@@ -252,14 +254,17 @@ void Breakout::movePaddle(){
     }
 }
 
-void Breakout::moveBall(){
+void Breakout::updateBallPosition(){
     // clear ball position
     this -> table[this -> ball -> objectRow][this -> ball -> objectColumn] = nullptr;
 
     // update ball position
     this -> ball -> objectRow = this -> ball -> getNewobjectRow();
     this -> ball -> objectColumn = this -> ball -> getNewobjectColumn();
+}
 
+void Breakout::moveBall(){
+    updateBallPosition();
     // update ball position in the table
     this -> table[this -> ball -> objectRow][this -> ball -> objectColumn] = this -> ball;
 
@@ -270,6 +275,10 @@ void Breakout::destroyBrick(Brick *brick){
     this -> table [brick -> objectRow][brick -> objectColumn] = nullptr;
     this -> table [brick -> nextBrick -> objectRow][brick -> nextBrick -> objectColumn] = nullptr;
 
+    if (score % 2 == 0){
+        this -> hp += 1;
+    }
+
     if(this -> score == 32){
         this -> hasWon = true;
     }
@@ -277,8 +286,50 @@ void Breakout::destroyBrick(Brick *brick){
 
 void Breakout::lifeLost(){
     this -> hp -= 1;
-    reset();
+    resetGameLifeLost();
     if(this -> hp == 0){
         this -> hasLost = true;
     }
+}
+
+void Breakout::resetGameLifeLost(){
+
+    // Reset the table, but keep the bricks
+    for (int i = 4; i < 8; i++){
+        for (int j = 0; j < 16; j++){
+            this -> table[i][j] = nullptr;
+        }
+    }
+
+    // Create the paddle
+    Paddle *paddle = new Paddle(7,6);
+    Paddle *paddle2 = new Paddle(7,7);
+    Paddle *paddle3 = new Paddle(7,8);
+    Paddle *paddle4 = new Paddle(7,9);
+    Paddle *paddle5 = new Paddle(7,10);
+    paddle->setNextPaddle(paddle2);
+    paddle2->setNextPaddle(paddle3);
+    paddle3->setNextPaddle(paddle4);
+    paddle4->setNextPaddle(paddle5);
+    paddle5->setNextPaddle(nullptr);
+
+    this -> rootPaddle = paddle;
+    this -> table[7][6] = paddle;
+    this -> table[7][7] = paddle2;
+    this -> table[7][8] = paddle3;
+    this -> table[7][9] = paddle4;
+    this -> table[7][10] = paddle5;
+    
+    // Create the ball
+    Ball *b = new Ball();
+    b->setSpeed(-1, 1);
+
+    // Randomize the ball position
+    int randomRow = 6; // ?
+    int randomColumn = rand()%(16);
+
+    b->setPos(randomRow, randomColumn);
+
+    this -> ball = b;
+    this -> table[randomRow][randomColumn] = b;
 }
