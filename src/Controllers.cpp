@@ -24,6 +24,7 @@ bool btn_init_pressed = false;
 
 // Use millis to capture the time, intervals and modes
 unsigned long timeMillis;
+unsigned long timeToDisplayScore = 0;
 unsigned long previousMillis = 0;
 unsigned long updateMillis = 0;
 const long interval = 3000;
@@ -123,11 +124,17 @@ void game_mode(DualMatrixController *screen, Breakout *game) {
     game->update();
 
     // * GAME LOST/WON
-
     if(game -> hasLost){
       Serial.println("GAME OVER");
       // TODO: SHOW SCORE
+      while(true) {
+        setMatrixNumber(game -> score, screen);
+        if(millis() - timeToDisplayScore >= 3000) {
+          break;
+        }
+      }
       buttons_mode = 0;
+
     }
 
     if(game -> hasWon){

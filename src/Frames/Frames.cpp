@@ -331,3 +331,147 @@ bool no09[8][8] {
   {0,1,1,1,0,0,0,1},
   {0,0,0,0,0,0,0,0},
 };
+
+void setMatrixNumber(int number, DualMatrixController *matrixController) {
+  
+  matrixController -> resetMatrix();
+
+  switch (number) {
+    case 0:
+      matrixController->setRightMatrix(no00);
+      break;
+    case 1:
+      matrixController->setRightMatrix(no01);
+      break;
+    case 2:
+      matrixController->setRightMatrix(no02);
+      break;
+    case 3:
+      matrixController->setRightMatrix(no03);
+      break;
+    case 4:
+      matrixController->setRightMatrix(no04);
+      break;
+    case 5:
+      matrixController->setRightMatrix(no05);
+      break;
+    case 6:
+      matrixController->setRightMatrix(no06);
+      break;
+    case 7:
+      matrixController->setRightMatrix(no07);
+      break;
+    case 8:
+      matrixController->setRightMatrix(no08);
+      break;
+    case 9:
+      matrixController->setRightMatrix(no09);
+    case 10:
+      matrixController->setLeftMatrix(no1);
+      matrixController->setRightMatrix(no0);
+      break;
+    case 11:
+      matrixController->setLeftMatrix(no1);
+      matrixController->setRightMatrix(no1);
+      break;
+    case 12:
+      matrixController->setLeftMatrix(no1);
+      matrixController->setRightMatrix(no2);
+      break;
+    case 13:
+
+      matrixController->setLeftMatrix(no1);
+      matrixController->setRightMatrix(no3);
+      break;
+    case 14:
+      matrixController->setLeftMatrix(no1);
+      matrixController->setRightMatrix(no4);
+      break;
+    case 15:
+      matrixController->setLeftMatrix(no1);
+      matrixController->setRightMatrix(no5);
+      break;
+    case 16:
+      matrixController->setLeftMatrix(no1);
+      matrixController->setRightMatrix(no6);
+      break;
+    case 17:
+      matrixController->setLeftMatrix(no1);
+      matrixController->setRightMatrix(no7);
+      break;
+    case 18:
+      matrixController->setLeftMatrix(no1);
+      matrixController->setRightMatrix(no8);
+      break;
+    case 19:
+      matrixController->setLeftMatrix(no1);
+      matrixController->setRightMatrix(no9);
+      break;
+    case 20:
+      matrixController->setLeftMatrix(no2);
+      matrixController->setRightMatrix(no0);
+      break;
+    case 21:
+      matrixController->setLeftMatrix(no2);
+      matrixController->setRightMatrix(no1);
+      break;
+    case 22:
+      matrixController->setLeftMatrix(no2);
+      matrixController->setRightMatrix(no2);
+      break;
+    case 23:
+      matrixController->setLeftMatrix(no2);
+      matrixController->setRightMatrix(no3);
+      break;
+    case 24:
+      matrixController->setLeftMatrix(no2);
+      matrixController->setRightMatrix(no4);
+      break;
+    case 25:
+      matrixController->setLeftMatrix(no2);
+      matrixController->setRightMatrix(no5);
+      break;
+    case 26:
+      matrixController->setLeftMatrix(no2);
+      matrixController->setRightMatrix(no6);
+      break;
+    case 27:
+      matrixController->setLeftMatrix(no2);
+      matrixController->setRightMatrix(no7);
+      break;
+    case 28:
+      matrixController->setLeftMatrix(no2);
+      matrixController->setRightMatrix(no8);
+      break;
+    case 29:
+      matrixController->setLeftMatrix(no2);
+      matrixController->setRightMatrix(no9);
+      break;
+    case 30:
+      matrixController->setLeftMatrix(no3);
+      matrixController->setRightMatrix(no0);
+      break;
+    case 31:
+      matrixController->setLeftMatrix(no3);
+      matrixController->setRightMatrix(no1);
+      break;
+    case 32:
+      matrixController->setLeftMatrix(no3);
+      matrixController->setRightMatrix(no2);
+      break;
+    case 33:
+      matrixController->setLeftMatrix(no3);
+      matrixController->setRightMatrix(no3);
+      break;
+    case 34:
+      matrixController->setLeftMatrix(no3);
+      matrixController->setRightMatrix(no4);
+      break;
+    case 35:
+      matrixController->setLeftMatrix(no3);
+      matrixController->setRightMatrix(no5);
+      break;
+    default:
+      break;
+  }
+}

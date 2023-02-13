@@ -1,6 +1,8 @@
 #ifndef Frames_h
 #define Frames_h
 
+#include "DualMatrixController.h"
+
 extern bool no0[8][8];
 extern bool no1[8][8];
 extern bool no2[8][8];
@@ -21,5 +23,7 @@ extern bool letraB[8][8];
 extern bool interrogacionCierra[8][8];
 extern bool interrogacionAbre[8][8];
 extern bool signoIgual[8][8];
+
+void setMatrixNumber(int number, DualMatrixController *matrixController);
 
 #endif

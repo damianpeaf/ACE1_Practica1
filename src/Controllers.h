@@ -4,6 +4,7 @@
 #include "Arduino.h"
 #include "DualMatrixController.h"
 #include "Breakout.h"
+#include "Frames.h"
 
 // Botons PINS
 extern const int BTN_IZQ;
