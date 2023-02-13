@@ -39,39 +39,26 @@ void setup() {
   initiate_buttons();
 }
 
-void loop() {
-
-  // evaluate the status of the buttons to know in which case we are
-  switch (buttons_mode) {
-
-    // Initial Message MODE
-    case 0:
-      // Serial.println("Running the text in a loop, waiting for a new instruction");
-      screen.setMatrix(resizedMessage);
-      if(!controller_init_matrix){
-        if (millis() - actualTime > map(analogRead(POTR), 0, 255, 40, 100)) {
-          actualTime = millis();
-          cycleMessageLeft();
-        }
-      }else {
-        if (millis() - actualTime > map(analogRead(POTR), 0, 255, 40, 100)) {
-          actualTime = millis();
-          cycleMessageRight();
-        }        
+void mode_0() {
+  while(buttons_mode != 1){
+    initial_mode();
+    screen.setMatrix(resizedMessage);
+    if(!controller_init_matrix){
+      if (millis() - actualTime > map(analogRead(POTR), 0, 255, 40, 100)) {
+        actualTime = millis();
+        cycleMessageLeft();
       }
-      initial_mode();
-      break;
-    
-    // Game MODE
-    case 1:
-      game_mode(&screen, &breakout);
-      break;
-    
-    // Configuration MODE
-    case 2:
-      // Serial.println("Running the configuration screen, waiting to see lifes or change volumen or return");
-      configuration_mode();
-      break;
+    }else {
+      if (millis() - actualTime > map(analogRead(POTR), 0, 255, 40, 100)) {
+        actualTime = millis();
+        cycleMessageRight();
+      }         
+    }
   }
+}
+
+void loop() {
+  mode_0();
+  game_mode(&screen, &breakout);
 
 }

@@ -112,7 +112,6 @@ void game_mode() {
   change_init_1();
   move_left_1();    
   move_right_1();
-
   last_btn_left_state = digitalRead(BTN_IZQ); 
   last_btn_init_state = digitalRead(BTN_INIT); 
   last_btn_right_state = digitalRead(BTN_DER);
@@ -129,7 +128,8 @@ void move_right_2(){
   }  
 }
 void configuration_mode() {
-  if(digitalRead(BTN_INIT) == LOW){
+  while(true){
+    if(digitalRead(BTN_INIT) == LOW){
 
     btn_init_start_time = millis();
     while(digitalRead(BTN_INIT) == LOW){
@@ -144,13 +144,15 @@ void configuration_mode() {
       btn_init_pressed = false;  
       Serial.println("THE GAME WAS CANCELED!");
       Serial.println("Button Middle held for 3 seconds");  
+      return;
     }
     else if((restTime - btn_init_start_time) >= 2000){
       previousMillis = millis(); // capture the time when the mode was changed
       buttons_mode = 1;
       btn_init_pressed = false;
       Serial.println("RESUMING GAME!");
-      Serial.println("Button Middle held for 2 seconds");                
+      Serial.println("Button Middle held for 2 seconds");
+      return;                
     }
   }
 
@@ -161,6 +163,7 @@ void configuration_mode() {
   last_btn_init_state = digitalRead(BTN_INIT); 
   last_btn_right_state = digitalRead(BTN_DER);
 
+  }
 }
 
 void mode_0() {
