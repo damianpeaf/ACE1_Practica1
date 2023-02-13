@@ -106,8 +106,6 @@ void change_init_1(){
 // Game logic for buttons
 void game_mode(DualMatrixController *screen, Breakout *game) {
 
-  // TODO: RESET THE GAME FOR FIRST TIME
-
   // * CONTROL INPUTS
   change_init_1();
   move_left_1(game);    
@@ -126,21 +124,21 @@ void game_mode(DualMatrixController *screen, Breakout *game) {
     // * GAME LOST/WON
     if(game -> hasLost){
       Serial.println("GAME OVER");
-      // TODO: SHOW SCORE
       while(true) {
         setMatrixNumber(game -> score, screen);
-        if(millis() - timeToDisplayScore >= 3000) {
+        if(millis() - updateMillis >= 3000) {
           break;
         }
       }
+      game->reset();
       buttons_mode = 0;
-
     }
 
     if(game -> hasWon){
         Serial.println("YOU WON");
         sound_buzzer(1500);
         delay(1500);
+        game->reset();
         buttons_mode = 0;
     }
 

@@ -23,7 +23,7 @@ void NoDriverMatrix::setMatrix(bool matrix[8][8]) {
 
         // Delay
         // TODO: USE MILLIS() INSTEAD OF DELAY()
-        delay(MULTIPLEXER_DELAY);
+        delay(1);
 
         // Turn off the row
         digitalWrite(this->rowPins[row], HIGH);
