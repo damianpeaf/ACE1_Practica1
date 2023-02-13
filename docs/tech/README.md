@@ -37,9 +37,9 @@ El objetivo del prototipo es el manejo de matrices de dos maneras: por medio de 
 # **Montaje del Hardware**
 A continuación se explica la conexión entre la placa Arduino MEGA y los demás componentes.
 - Conexión para Comunicación Serial: Se utilizaron los pines RXO Y TX0. 
-![Proteus Ejecutado](https://gitlab.com/grupo-7-ace1b-1s2023/ACE1-231S0778BG07PRA1/-/tree/main/docs/tech/images/tecnico/instalacion1.jpg)
+![Proteus Ejecutado](docs/tech/images/tecnico/instalacion1.jpg)
 - Conexión con los botones: se utilizaron los pines 5, 6 y 7.
-![Proteus Ejecutado](images\tecnico\instalacion2.jpg)
+![Proteus Ejecutado](./images/tecnico/instalacion2.jpg)
 - Conexión con el sounder: se utilizó el pin 8. <br>
 ![Proteus Ejecutado](images\tecnico\instalacion3.jpg)
 - Conexión con el driver MAX7219: se utilizaron los pines 10, 11 y 13, el pin 10 se conectó con el LOAD del MAX7219, el pin 11 se conectó con el DIN del MAX7219 y el pin 13 se conectó al CLK del MAX7219.
