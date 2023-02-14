@@ -37,26 +37,31 @@ El objetivo del prototipo es el manejo de matrices de dos maneras: por medio de 
 # **Montaje del Hardware**
 A continuación se explica la conexión entre la placa Arduino MEGA y los demás componentes.
 - Conexión para Comunicación Serial: Se utilizaron los pines RXO Y TX0. 
-![Proteus Ejecutado](docs/tech/images/tecnico/instalacion1.jpg)
-- Conexión con los botones: se utilizaron los pines 5, 6 y 7.
+<br>
 ![Proteus Ejecutado](./images/tecnico/instalacion2.jpg)
-- Conexión con el sounder: se utilizó el pin 8. <br>
-![Proteus Ejecutado](images\tecnico\instalacion3.jpg)
+- Conexión con los botones: se utilizaron los pines 5, 6 y 7.
+<br>
+![Proteus Ejecutado](./images/tecnico/instalacion2.jpg)
+- Conexión con el sounder: se utilizó el pin 8. 
+<br>
+![Proteus Ejecutado](./images/tecnico/instalacion3.jpg)
 - Conexión con el driver MAX7219: se utilizaron los pines 10, 11 y 13, el pin 10 se conectó con el LOAD del MAX7219, el pin 11 se conectó con el DIN del MAX7219 y el pin 13 se conectó al CLK del MAX7219.
-![Proteus Ejecutado](images\tecnico\instalacion4.jpg)
+<br>
+![Proteus Ejecutado](./images/tecnico/instalacion4.jpg)
 - Conexión con las Matrices LED sin driver: se utilizaron los pines del 30 al 37 para la conexión de las filas y los pines del 40 al 47 para la conexión de las columnas.
-![Proteus Ejecutado](images\tecnico\instalacion5.jpg)
+<br>
+![Proteus Ejecutado](./images/tecnico/instalacion5.jpg)
 
 A continuación se muestra la conexión entre el driver MAX7219 con la matriz que es manejada por el mismo:
 por parte del Driver, se conectó de las salidas A-G y DP, con las columnas y de las salidas DIG0-DIG7 las filas. Adicional a esto de la salida ISET se colocó la alimentación y una resistencia. 
-![Proteus Ejecutado](images\tecnico\instalacion6.jpg)
+![Proteus Ejecutado](./images/tecnico/instalacion6.jpg)
 # **Programación del Software**
 ## Carga del código en la placa Arduino
 - Es necesario corroborar que el archivo *.hex* generado en la compilación del archivo con el *IDE Arduino* esté instalado en la placa, para ello debemos dar doble click sobre la placa Arduino y verificar la dirección en el apartado de *PROGRAM FILE*. 
-![Program File](images\usuario\instrucciones2.jpg)
-![Program File](images\usuario\instrucciones3.jpg)
+![Program File](./images/tecnico/instrucciones2.jpg)
+![Program File](./images/tecnico/instrucciones3.jpg)
 - De no encontrarse algún archivo seleccionado, es necesario colocar el archivo *.hex*, para ello debemos darle click al ícono de folder en el apartado de *PROGRAM FILE*, esto nos abrirá un selector de archivos, donde debemos buscar la carpeta de nombre *build* el ella se encontrarán 3 archivos, debemos seleccionar el de nombre *src.ino.with_bootloader.hex*
-![Program File](images\usuario\instrucciones4.jpg)
+![Program File](./images/tecnico/instrucciones4.jpg)
 ## Código
 ### Manejo del Mensaje de inicio
 ### Lógica del Juego

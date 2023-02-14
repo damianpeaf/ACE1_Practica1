@@ -14,6 +14,7 @@
 #include "DualMatrixController.h"
 #include "Breakout.h"
 #include "utils.h"
+#include "Frames.h"
 
 
 int leftMatrixRowPins[8] = {30,31,32,33,34,35,36,37};
@@ -60,5 +61,4 @@ void mode_0() {
 void loop() {
   mode_0();
   game_mode(&screen, &breakout);
-
 }

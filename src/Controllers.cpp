@@ -88,7 +88,7 @@ void move_right_1( Breakout *game) {
   }  
 }
 
-void change_init_1(){
+void change_init_1(DualMatrixController *screen, int vidas){
   if(digitalRead(BTN_INIT) == LOW){
     // first check in what mode the app is
     if((millis() - previousMillis) >= interval){
@@ -96,7 +96,7 @@ void change_init_1(){
       buttons_mode = 2;
       Serial.println("INIT button was changed to configurate mode");
       Serial.println("Button Middle held for 3 seconds");
-      configuration_mode();
+      configuration_mode(screen, vidas);
     }               
   } else {
     previousMillis = millis();
@@ -107,7 +107,7 @@ void change_init_1(){
 void game_mode(DualMatrixController *screen, Breakout *game) {
 
   // * CONTROL INPUTS
-  change_init_1();
+  
   move_left_1(game);    
   move_right_1(game);
   
@@ -125,7 +125,7 @@ void game_mode(DualMatrixController *screen, Breakout *game) {
     if(game -> hasLost){
       Serial.println("GAME OVER");
       while(true) {
-        setMatrixNumber(game -> score, screen);
+        setMatrixNumberScore(game -> score, screen);
         if(millis() - updateMillis >= 3000) {
           break;
         }
@@ -150,15 +150,23 @@ void game_mode(DualMatrixController *screen, Breakout *game) {
 
     game->refreshMatrix();
   }
-
+  change_init_1(screen, game -> hp);
   screen->setMatrix(game -> matrix);
 
 }
 
 // Configurate/pause logic for buttons
-void move_left_2(){
+void move_left_2(DualMatrixController *screen, int vidas){
   if(digitalRead(BTN_IZQ) == LOW && last_btn_left_state == HIGH){
     Serial.println("SEE REMAINING LIFES");
+    while(true){
+      setMatrixNumberHP(vidas,screen);
+      
+      if(digitalRead(BTN_INIT) == LOW) {
+          break;
+        }
+    }
+    
   }  
 }
 void move_right_2(){
@@ -166,7 +174,7 @@ void move_right_2(){
     Serial.println("CHANGE VOLUME");
   }  
 }
-void configuration_mode() {
+void configuration_mode(DualMatrixController *screen, int vidas) {
 
   while(true){
     if(digitalRead(BTN_INIT) == LOW){
@@ -196,7 +204,7 @@ void configuration_mode() {
     }
   }
 
-  move_left_2();
+  move_left_2(screen, vidas);
   move_right_2();
 
   last_btn_left_state = digitalRead(BTN_IZQ); 
