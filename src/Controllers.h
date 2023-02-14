@@ -41,5 +41,6 @@ void game_mode(DualMatrixController *screen, Breakout *game);
 void configuration_mode(DualMatrixController *screen, int vidas);
 void initiate_buttons();
 void sound_buzzer(int duration);
+void calculate_volume();
 
 #endif

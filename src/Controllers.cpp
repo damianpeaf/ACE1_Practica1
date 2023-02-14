@@ -27,6 +27,7 @@ unsigned long timeToDisplayScore = 0;
 unsigned long previousMillis = 0;
 unsigned long updateMillis = 0;
 int buttons_mode = 0; // 0 is the first mode to control the text loop, 1 to control the game mode, and 2 the pause / configurate mode
+bool freq_matrix [8][16];
 
 // Separeted functions
 void move_left_0(){
@@ -163,17 +164,18 @@ void move_left_2(DualMatrixController *screen, int vidas){
           break;
       }
     }
-    
   }  
 }
 
 
-void move_right_2(){
+void move_right_2(DualMatrixController *screen){
   if(digitalRead(BTN_DER) == LOW && last_btn_right_state == HIGH){
     while(true){
       // change volumen
       int value = map(analogRead(POTR), 0, 1023, 250, 725);
       buzzer_freq = value;
+      calculate_volume();
+      screen->setMatrix(freq_matrix); // matrix
       // matrix
       if(digitalRead(BTN_INIT) == LOW || digitalRead(BTN_IZQ) == LOW) {
         tone(BUZZER, buzzer_freq, 100);
@@ -214,7 +216,7 @@ void configuration_mode(DualMatrixController *screen, int vidas) {
   }
 
   move_left_2(screen, vidas);
-  move_right_2();
+  move_right_2(screen);
 
   last_btn_left_state = digitalRead(BTN_IZQ); 
   last_btn_init_state = digitalRead(BTN_INIT); 
@@ -237,7 +239,17 @@ void sound_buzzer(int duration) {
   tone(BUZZER, buzzer_freq, duration);
 }
 
-void change_volumen(int value) {
-  buzzer_freq = value;
-  tone(BUZZER, buzzer_freq, 100);
+void calculate_volume(){
+  int value = map(buzzer_freq, 250, 725, 0, 16);
+  
+  for(int i = 0; i < 8; i++){
+    for (int j = 0; j < 16; j++){
+      freq_matrix[i][j] = 0; 
+    }
+  }
+
+    for (int j = 0; j < value; j++){
+      freq_matrix[7][j] = 1; 
+  }
+
 }
