@@ -33,8 +33,6 @@ extern bool btn_init_pressed;
 // Use millis to capture the time, intervals and modes
 extern unsigned long timeMillis;
 extern unsigned long previousMillis;
-extern const long interval;
-extern const long interval_2;
 extern int buttons_mode;
 
 void initial_mode();

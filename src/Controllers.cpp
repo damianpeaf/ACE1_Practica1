@@ -23,11 +23,8 @@ unsigned long btn_init_start_time;
 bool btn_init_pressed = false;
 
 // Use millis to capture the time, intervals and modes
-unsigned long timeMillis;
 unsigned long previousMillis = 0;
 unsigned long updateMillis = 0;
-const long interval = 3000;
-const long interval_2 = 2000;
 int buttons_mode = 0; // 0 is the first mode to control the text loop, 1 to control the game mode, and 2 the pause / configurate mode
 
 // Separeted functions
@@ -45,8 +42,8 @@ void move_right_0() {
 }
 void change_init_0(){
   if(digitalRead(BTN_INIT) == LOW){
-    // first check in what mode the app is
-    if((millis() - previousMillis) >= interval){
+    // first check in what mode the app 3900
+    if((millis() - previousMillis) >= 3000){
       previousMillis = millis(); // capture the time when the mode was changed
       buttons_mode = 1;
       Serial.println("INIT button was changed to game mode");
@@ -90,7 +87,7 @@ void move_right_1( Breakout *game) {
 void change_init_1(){
   if(digitalRead(BTN_INIT) == LOW){
     // first check in what mode the app is
-    if((millis() - previousMillis) >= interval){
+    if((millis() - previousMillis) >= 3000){
       previousMillis = millis(); // capture the time when the mode was changed
       buttons_mode = 2;
       Serial.println("INIT button was changed to configurate mode");
@@ -213,4 +210,8 @@ void initiate_buzzer() {
 
 void sound_buzzer(int duration) {
   tone(BUZZER, buzzer_freq, duration);
+}
+
+void changeVolumen(int value) {
+  tone(BUZZER, value, 100);
 }
