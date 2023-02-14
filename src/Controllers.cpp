@@ -8,7 +8,6 @@ const int POTR = A0;
 const int BUZZER = 8;
 int buzzer_freq = 500;
 
-
 // Button previous states
 int last_btn_left_state = HIGH;
 int last_btn_init_state = HIGH;
@@ -162,19 +161,31 @@ void move_left_2(DualMatrixController *screen, int vidas){
       
       if(digitalRead(BTN_INIT) == LOW) {
           break;
-        }
+      }
     }
     
   }  
 }
+
+
 void move_right_2(){
   if(digitalRead(BTN_DER) == LOW && last_btn_right_state == HIGH){
-    Serial.println("CHANGE VOLUME");
+    while(true){
+      // change volumen
+      int value = map(analogRead(POTR), 0, 1023, 250, 725);
+      buzzer_freq = value;
+      // matrix
+      if(digitalRead(BTN_INIT) == LOW || digitalRead(BTN_IZQ) == LOW) {
+        tone(BUZZER, buzzer_freq, 100);
+        break;
+      }
+    }
   }  
 }
 void configuration_mode(DualMatrixController *screen, int vidas) {
 
   while(true){
+    setMatrixNumberHP(vidas,screen);
     if(digitalRead(BTN_INIT) == LOW){
 
     btn_init_start_time = millis();
@@ -226,6 +237,7 @@ void sound_buzzer(int duration) {
   tone(BUZZER, buzzer_freq, duration);
 }
 
-void changeVolumen(int value) {
-  tone(BUZZER, value, 100);
+void change_volumen(int value) {
+  buzzer_freq = value;
+  tone(BUZZER, buzzer_freq, 100);
 }
