@@ -20,22 +20,22 @@
 int leftMatrixRowPins[8] = {30,31,32,33,34,35,36,37};
 int leftMatrixColumnPins[8] = {40,41,42,43,44,45,46,47};
 
-NoDriverMatrix leftMatrix(leftMatrixRowPins, leftMatrixColumnPins);
+NoDriverMatrix *leftMatrix = new NoDriverMatrix(leftMatrixRowPins, leftMatrixColumnPins);
 
 //DIN,CLK,LOAD,#Devices
-LedControl rightMatrix(11, 13, 10, 1);
+LedControl *rightMatrix = new LedControl(11, 13, 10, 1);
 
-DualMatrixController screen(&leftMatrix, &rightMatrix);
+DualMatrixController *screen = new DualMatrixController(leftMatrix, rightMatrix);
 
 unsigned long actualTime = millis();
 
-Breakout breakout;
+Breakout *breakout = new Breakout();
 
 void setup() {
 
   Serial.begin(9600);
-  screen.initMatrix();
-  breakout.reset();
+  screen->initMatrix();
+  breakout->reset();
   cycleMessageLeft();
   initiate_buttons();
 }
@@ -43,7 +43,7 @@ void setup() {
 void mode_0() {
   while(buttons_mode != 1){
     initial_mode();
-    screen.setMatrix(resizedMessage);
+    screen->setMatrix(resizedMessage);
     if(!controller_init_matrix){
       if (millis() - actualTime > map(analogRead(POTR), 0, 255, 40, 100)) {
         actualTime = millis();
@@ -60,5 +60,5 @@ void mode_0() {
 
 void loop() {
   mode_0();
-  game_mode(&screen, &breakout);
+  game_mode(screen, breakout);
 }
