@@ -9,6 +9,18 @@ DualMatrixController::DualMatrixController(
     this->rightMatrix = rightMatrix;
 }
 
+void DualMatrixController::setLeftMatrix(bool matrix[8][8]) {
+    this->leftMatrix->setMatrix(matrix);
+}
+
+void DualMatrixController::setRightMatrix(bool matrix[8][8]) {
+    for (int i = 0; i < 8; i++) {
+        for (int j = 0; j < 8; j++) {
+            this->rightMatrix->setLed(0, i, j, matrix[i][j]);
+        }
+    }
+}
+
 void DualMatrixController::setMatrix(bool matrix[8][16]) {
     bool lf[8][8];
     bool rm[8][8];

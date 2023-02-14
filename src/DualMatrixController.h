@@ -21,6 +21,10 @@ class DualMatrixController {
 
     void resetMatrix(void);
 
+    void setLeftMatrix(bool matrix[8][8]);
+    
+    void setRightMatrix(bool matrix[8][8]);
+
     private:
         NoDriverMatrix *leftMatrix;
         LedControl *rightMatrix;
